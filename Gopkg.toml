@@ -1,7 +1,3 @@
-required = [
-  "github.com/onsi/ginkgo/ginkgo",
-]
-
 [[constraint]]
   name = "github.com/onsi/ginkgo"
   revision = "03ffd3f46debf00c49ed76d5dbb564ef4839adfe"

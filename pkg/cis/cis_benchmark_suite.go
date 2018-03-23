@@ -1,4 +1,4 @@
-package benchmark_test
+package cis
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestCISBenchmark(t *testing.T) {
+func CISBenchmark(t *testing.T) {
 	RegisterFailHandler(Fail)
 	junitReporter := reporters.NewJUnitReporter("junit.xml")
 	RunSpecsWithDefaultAndCustomReporters(t, "Kubernetes CIS benchmark", []Reporter{junitReporter})

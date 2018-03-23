@@ -1,27 +1,26 @@
 ROOTPKG := $(shell go list .)
 PARENTPKG := $(shell dirname $(ROOTPKG))
-BINARYNAME := $(shell basename $(ROOTPKG)).test
+BINARYNAME := $(shell basename $(ROOTPKG))
 
 export GOPATH := $(CURDIR)/.go
 export GOBIN := $(GOPATH)/bin
 export CGO_ENABLED=0
 
+BUILD_DATE := $(shell date -u)
+VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty --always)
+
 DCOS_TASK ?= kube-apiserver-0-instance
 GINKGO_FOCUS ?=[1.1]
-
-.PHONY: test
-test: $(GOBIN)/ginkgo
-	@cd $(GOPATH)/src/$(ROOTPKG) && $(GOBIN)/ginkgo -notify
-
-.PHONY: watch
-watch: $(GOBIN)/ginkgo
-	@cd $(GOPATH)/src/$(ROOTPKG) && $(GOBIN)/ginkgo watch -notify
 
 .PHONY: build
 build: out/$(BINARYNAME)
 
-out/$(BINARYNAME): .vendor $(shell find -type f -name '*.go')
-	@cd $(GOPATH)/src/$(ROOTPKG) && GOOS=linux GOARCH=amd64 go test -v -c -o $(CURDIR)/out/$(BINARYNAME) .
+out/$(BINARYNAME): .vendor $(shell find ! -path '*/.go/*' -type f -name '*.go')
+	@cd $(GOPATH)/src/$(ROOTPKG) && \
+		GOOS=linux GOARCH=amd64 go build \
+			-tags netgo \
+			-ldflags "-extldflags \"-static\" -X $(ROOTPKG)/pkg/version.AppVersion=$(VERSION) -X '$(ROOTPKG)/pkg/version.BuildDate=$(BUILD_DATE)'" \
+			-o $(CURDIR)/out/$(BINARYNAME) .
 
 .PHONY: vendor
 vendor: .vendor
@@ -37,26 +36,6 @@ vendor: .vendor
 	@mkdir -p $(GOPATH)/src/$(PARENTPKG)
 	@ln -s $(CURDIR) $(GOPATH)/src/$(ROOTPKG)
 	@touch $@
-
-.PHONY: ginkgo.bootstrap
-ginkgo.bootstrap: $(GOBIN)/ginkgo
-ifndef BOOTSTRAP_DIR
-	$(error "Missing BOOTSTRAP_DIR variable - use make BOOTSTRAP_DIR=path/to/tests ginkgo.bootstrap")
-endif
-	mkdir -p $(BOOTSTRAP_DIR) && cd $(BOOTSTRAP_DIR) && $(GOBIN)/ginkgo bootstrap
-
-.PHONY: ginkgo.generate
-ginkgo.generate: 
-ifndef SUBJECT
-	$(error "Missing SUBJECT variable - use make SUBJECT=subject ginkgo.generate")
-endif
-	$(GOBIN)/ginkgo generate $(SUBJECT)
-
-.PHONY: ginkgo.build
-ginkgo.build: $(GOBIN)/ginkgo
-
-$(GOBIN)/ginkgo: .vendor
-	@go install ./.go/src/$(ROOTPKG)/vendor/github.com/onsi/ginkgo/ginkgo
 
 .PHONY: dep
 dep: $(GOBIN)/dep
@@ -81,7 +60,7 @@ endif
 	@cat out/$(BINARYNAME) | dcos task exec -i $(DCOS_TASK) bash -c "cat > $(BINARYNAME)"
 	@dcos task exec $(DCOS_TASK) chmod +x $(BINARYNAME)
 	@echo "Running tests on $(DCOS_TASK)"
-	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) -ginkgo.focus='$(GINKGO_FOCUS)' -ginkgo.noisySkippings=false -ginkgo.noisyPendings=false -ginkgo.noColor > $(CURDIR)/results/$(GINKGO_FOCUS).txt || true
+	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis --ginkgo.focus='$(GINKGO_FOCUS)' --ginkgo.noisySkippings=false --ginkgo.noisyPendings=false --ginkgo.noColor > $(CURDIR)/results/$(GINKGO_FOCUS).txt || true
 	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/junit.$(GINKGO_FOCUS).xml"
 	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(GINKGO_FOCUS).xml
 

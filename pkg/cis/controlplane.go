@@ -1,13 +1,15 @@
-package benchmark_test
+package cis
 
 import (
 	. "github.com/onsi/ginkgo"
 
-	controlplane "github.com/mesosphere/kubernetes-security-benchmark/control_plane"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/controlplane"
 )
 
+const CISVersion = "1.2.0"
+
 func CISDescribe(text string, body func()) bool {
-	return Describe("[CIS] "+text, body)
+	return Describe("[CIS 1.2.0] "+text, body)
 }
 
 var _ = CISDescribe("[1] Control plane", func() {

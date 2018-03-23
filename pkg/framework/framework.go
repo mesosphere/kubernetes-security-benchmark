@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	. "github.com/onsi/ginkgo"
-
 	"github.com/shirou/gopsutil/process"
 )
 
