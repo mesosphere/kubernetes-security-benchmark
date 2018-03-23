@@ -39,9 +39,8 @@ var cisCmd = &cobra.Command{
 
 func init() {
 
-	ginkgoFlagSet := flag.NewFlagSet("ginkgo", flag.ContinueOnError)
-	config.Flags(ginkgoFlagSet, "ginkgo", false)
-
+	ginkgoFlagSet := flag.NewFlagSet("spec", flag.ContinueOnError)
+	config.Flags(ginkgoFlagSet, "spec", false)
 	cisCmd.Flags().AddGoFlagSet(ginkgoFlagSet)
 
 	rootCmd.AddCommand(cisCmd)
