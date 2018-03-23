@@ -6,10 +6,16 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
 	"github.com/onsi/gomega/types"
+
+	"github.com/mesosphere/kubernetes-security-benchmark/framework"
 )
 
 func flagID(f interface{}) string {
 	return strings.Split(f.(string), "=")[0]
+}
+
+func ExpectProcess(f *framework.Framework) GomegaAssertion {
+	return Expect(f.Process.CmdlineSlice())
 }
 
 func HaveFlagWithValue(name, value string) types.GomegaMatcher {
