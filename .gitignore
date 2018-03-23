@@ -1,0 +1,8 @@
+vendor
+cis-benchmark
+.gopath*
+.go
+.vendor
+junit*.xml
+results/
+out/
