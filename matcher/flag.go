@@ -1,4 +1,4 @@
-package benchmark_test
+package matcher
 
 import (
 	"strings"

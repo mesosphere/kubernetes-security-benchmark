@@ -1,7 +1,5 @@
 required = [
-  "github.com/onsi/ginkgo",
   "github.com/onsi/ginkgo/ginkgo",
-  "github.com/onsi/gomega",
 ]
 
 [[constraint]]

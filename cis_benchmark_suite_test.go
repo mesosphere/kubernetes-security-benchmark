@@ -11,5 +11,5 @@ import (
 func TestCISBenchmark(t *testing.T) {
 	RegisterFailHandler(Fail)
 	junitReporter := reporters.NewJUnitReporter("junit.xml")
-	RunSpecsWithDefaultAndCustomReporters(t, "CIS Benchmark Suite", []Reporter{junitReporter})
+	RunSpecsWithDefaultAndCustomReporters(t, "Kubernetes CIS benchmark", []Reporter{junitReporter})
 }

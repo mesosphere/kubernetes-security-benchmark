@@ -1,5 +1,5 @@
 vendor
-cis-benchmark
+kubernetes-security-benchmark
 .gopath*
 .go
 .vendor
