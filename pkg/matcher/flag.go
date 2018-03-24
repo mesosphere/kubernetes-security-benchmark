@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega/gstruct"
 	"github.com/onsi/gomega/types"
 
-	"github.com/mesosphere/kubernetes-security-benchmark/framework"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
 )
 
 func flagID(f interface{}) string {

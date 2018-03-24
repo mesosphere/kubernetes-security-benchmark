@@ -1,12 +1,12 @@
-package control_plane
+package controlplane
 
 import (
 	"fmt"
 
 	. "github.com/onsi/ginkgo"
 
-	"github.com/mesosphere/kubernetes-security-benchmark/framework"
-	. "github.com/mesosphere/kubernetes-security-benchmark/matcher"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
+	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/matcher"
 )
 
 const apiServerProcessName = "kube-apiserver"

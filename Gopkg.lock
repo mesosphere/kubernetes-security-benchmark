@@ -17,17 +17,16 @@
   version = "v1.2.1"
 
 [[projects]]
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
+
+[[projects]]
   name = "github.com/onsi/ginkgo"
   packages = [
     ".",
     "config",
-    "ginkgo",
-    "ginkgo/convert",
-    "ginkgo/interrupthandler",
-    "ginkgo/nodot",
-    "ginkgo/testrunner",
-    "ginkgo/testsuite",
-    "ginkgo/watch",
     "internal/codelocation",
     "internal/containernode",
     "internal/failer",
@@ -87,6 +86,18 @@
   revision = "bb4de0191aa41b5507caa14b0650cdbddcd9280b"
 
 [[projects]]
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
+  version = "v0.0.1"
+
+[[projects]]
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = [
@@ -103,7 +114,7 @@
     "unix",
     "windows"
   ]
-  revision = "641605214e7dab930817f68e2fef560efbb033e5"
+  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -138,6 +149,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "110e1ee5f98bc709333cba8877e26d65cd12841211f220f3c9ba13695e160f9b"
+  inputs-digest = "07ca07399bc941fc4486099292aa2c83560dabf8875d2b8670c87e3f9f3c5358"
   solver-name = "gps-cdcl"
   solver-version = 1
