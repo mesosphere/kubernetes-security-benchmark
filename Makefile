@@ -10,7 +10,7 @@ BUILD_DATE := $(shell date -u)
 VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty --always)
 
 DCOS_TASK ?= kube-apiserver-0-instance
-GINKGO_FOCUS ?=[1.1]
+CIS_FOCUS ?= api-server
 
 .PHONY: build
 build: out/$(BINARYNAME)
@@ -60,18 +60,18 @@ endif
 	@cat out/$(BINARYNAME) | dcos task exec -i $(DCOS_TASK) bash -c "cat > $(BINARYNAME)"
 	@dcos task exec $(DCOS_TASK) chmod +x $(BINARYNAME)
 	@echo "Running tests on $(DCOS_TASK)"
-	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis --ginkgo.focus='$(GINKGO_FOCUS)' --ginkgo.noisySkippings=false --ginkgo.noisyPendings=false --ginkgo.noColor > $(CURDIR)/results/$(GINKGO_FOCUS).txt || true
-	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/junit.$(GINKGO_FOCUS).xml"
-	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(GINKGO_FOCUS).xml
+	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(CIS_FOCUS).txt || true
+	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/junit.$(CIS_FOCUS).xml"
+	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(CIS_FOCUS).xml
 
 .PHONY: test.dcos.apiserver
 test.dcos.apiserver:
-	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance GINKGO_FOCUS=\\[1\\.1\\] test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance CIS_FOCUS=api-server test.dcos.remote
 
 .PHONY: test.dcos.scheduler
 test.dcos.scheduler:
-	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance GINKGO_FOCUS=\\[1\\.2\\] test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=scheduler test.dcos.remote
 
 .PHONY: test.dcos.controller-manager
 test.dcos.controller-manager:
-	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance GINKGO_FOCUS=\\[1\\.3\\] test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=controller-manager test.dcos.remote

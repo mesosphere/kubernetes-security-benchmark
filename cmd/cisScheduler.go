@@ -1,4 +1,4 @@
-// Copyright © 2018 Jimmi Dyson <jdyson@mesosphere.com>
+// Copyright © 2018 Jimmi Dyson <jimmidyson@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,30 +15,21 @@
 package cmd
 
 import (
-	"flag"
-
 	"github.com/onsi/ginkgo/config"
 	"github.com/spf13/cobra"
-
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis"
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/util"
 )
 
-// cisCmd represents the cis command
-var cisCmd = &cobra.Command{
-	Use:   "cis",
-	Short: "Run Kubernetes CIS Benchmark tests",
-	Long:  `Run Kubernetes CIS Benchmark tests.`,
+// cisSchedulerCmd represents the cis scheduler command
+var cisSchedulerCmd = &cobra.Command{
+	Use:   "scheduler",
+	Short: "Run the scheduler specific benchmarks",
+	Long:  `Run the scheduler specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		util.RunTests("Kubernetes CIS Benchmark", cis.CISBenchmark)
+		config.GinkgoConfig.FocusString = `\[1\.2\]`
+		cisCmd.Run(cmd, args)
 	},
 }
 
 func init() {
-
-	ginkgoFlagSet := flag.NewFlagSet("spec", flag.ContinueOnError)
-	config.Flags(ginkgoFlagSet, "spec", false)
-	cisCmd.Flags().AddGoFlagSet(ginkgoFlagSet)
-
-	rootCmd.AddCommand(cisCmd)
+	cisCmd.AddCommand(cisSchedulerCmd)
 }
