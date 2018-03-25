@@ -35,9 +35,16 @@ var cisCmd = &cobra.Command{
 }
 
 func init() {
-
 	ginkgoFlagSet := flag.NewFlagSet("spec", flag.ContinueOnError)
 	config.Flags(ginkgoFlagSet, "spec", false)
+	config.DefaultReporterConfig.NoColor = true
+	config.DefaultReporterConfig.Succinct = true
+	config.DefaultReporterConfig.NoisySkippings = false
+	config.DefaultReporterConfig.NoisyPendings = false
+	ginkgoFlagSet.Lookup("spec.succinct").DefValue = "true"
+	ginkgoFlagSet.Lookup("spec.noisySkippings").DefValue = "false"
+	ginkgoFlagSet.Lookup("spec.noisyPendings").DefValue = "false"
+	ginkgoFlagSet.Lookup("spec.noColor").DefValue = "true"
 	cisCmd.Flags().AddGoFlagSet(ginkgoFlagSet)
 
 	rootCmd.AddCommand(cisCmd)
