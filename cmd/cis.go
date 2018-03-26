@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/config"
@@ -33,8 +32,6 @@ var (
 		Short: "Run Kubernetes CIS Benchmark tests",
 		Long:  `Run Kubernetes CIS Benchmark tests.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("fail on missing", failOnMissingProcess)
-
 			missingProcFunc := ginkgo.Skip
 			if failOnMissingProcess {
 				missingProcFunc = ginkgo.Fail
