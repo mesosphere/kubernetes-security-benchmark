@@ -22,12 +22,15 @@ import (
 	"github.com/shirou/gopsutil/process"
 )
 
+type MissingProcessHandlerFunc func(string, ...int)
+
 type Framework struct {
-	ProcessName string
-	Process     *process.Process
+	ProcessName        string
+	Process            *process.Process
+	missingProcessFunc MissingProcessHandlerFunc
 }
 
-func New(processName string) *Framework {
+func New(processName string, missingProcessFunc MissingProcessHandlerFunc) *Framework {
 	var proc *process.Process
 	processes, _ := process.Processes()
 	for _, p := range processes {
@@ -39,8 +42,9 @@ func New(processName string) *Framework {
 	}
 
 	f := &Framework{
-		ProcessName: processName,
-		Process:     proc,
+		ProcessName:        processName,
+		Process:            proc,
+		missingProcessFunc: missingProcessFunc,
 	}
 
 	BeforeEach(f.beforeEach)
@@ -50,6 +54,6 @@ func New(processName string) *Framework {
 
 func (f *Framework) beforeEach() {
 	if f.Process == nil {
-		Fail(fmt.Sprintf("%s is not running", f.ProcessName))
+		f.missingProcessFunc(fmt.Sprintf("%s is not running", f.ProcessName))
 	}
 }

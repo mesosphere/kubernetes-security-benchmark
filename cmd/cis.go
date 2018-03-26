@@ -16,7 +16,9 @@ package cmd
 
 import (
 	"flag"
+	"fmt"
 
+	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/config"
 	"github.com/spf13/cobra"
 
@@ -24,15 +26,25 @@ import (
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/util"
 )
 
-// cisCmd represents the cis command
-var cisCmd = &cobra.Command{
-	Use:   "cis",
-	Short: "Run Kubernetes CIS Benchmark tests",
-	Long:  `Run Kubernetes CIS Benchmark tests.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		util.RunTests("Kubernetes CIS Benchmark", cis.CISBenchmark)
-	},
-}
+var (
+	// cisCmd represents the cis command
+	cisCmd = &cobra.Command{
+		Use:   "cis",
+		Short: "Run Kubernetes CIS Benchmark tests",
+		Long:  `Run Kubernetes CIS Benchmark tests.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("fail on missing", failOnMissingProcess)
+
+			missingProcFunc := ginkgo.Skip
+			if failOnMissingProcess {
+				missingProcFunc = ginkgo.Fail
+			}
+			util.RunTests("Kubernetes CIS Benchmark", cis.CISBenchmark(missingProcFunc))
+		},
+	}
+
+	failOnMissingProcess = false
+)
 
 func init() {
 	ginkgoFlagSet := flag.NewFlagSet("spec", flag.ContinueOnError)
@@ -46,6 +58,8 @@ func init() {
 	ginkgoFlagSet.Lookup("spec.noisyPendings").DefValue = "false"
 	ginkgoFlagSet.Lookup("spec.noColor").DefValue = "true"
 	cisCmd.Flags().AddGoFlagSet(ginkgoFlagSet)
+
+	cisCmd.Flags().BoolVar(&failOnMissingProcess, "spec.failOnMissingProcess", false, "Whether the tests should fail if the relevant process is not running")
 
 	rootCmd.AddCommand(cisCmd)
 }

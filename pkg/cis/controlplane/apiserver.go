@@ -25,8 +25,8 @@ import (
 
 const apiServerProcessName = "kube-apiserver"
 
-func APIServer(index, subIndex int) {
-	f := framework.New(apiServerProcessName)
+func APIServer(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+	f := framework.New(apiServerProcessName, missingProcessFunc)
 
 	It(fmt.Sprintf("[%d.%d.1] Ensure that the --anonymous-auth argument is set to false", index, subIndex), func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--anonymous-auth", "false"))

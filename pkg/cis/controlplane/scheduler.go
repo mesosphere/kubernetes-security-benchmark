@@ -25,8 +25,8 @@ import (
 
 const schedulerProcessName = "kube-scheduler"
 
-func Scheduler(index, subIndex int) {
-	f := framework.New(schedulerProcessName)
+func Scheduler(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+	f := framework.New(schedulerProcessName, missingProcessFunc)
 
 	It(fmt.Sprintf("[%d.%d.1] Ensure that the --profiling argument is set to false", index, subIndex), func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
