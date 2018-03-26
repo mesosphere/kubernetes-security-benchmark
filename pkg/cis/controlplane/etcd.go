@@ -60,7 +60,7 @@ func Etcd(index, subIndex int, missingProcessFunc framework.MissingProcessHandle
 	})
 
 	It(fmt.Sprintf("[%d.%d.8] Ensure that the --max-wals argument is set to 0", index, subIndex), func() {
-		ExpectProcess(f).To(HaveFlagThatMatchesNumerically("--max-wals", "==", 0))
+		ExpectProcess(f).To(HaveFlagWithValue("--max-wals", "0"))
 	})
 
 	PIt(fmt.Sprintf("[%d.%d.9] Ensure that a unique Certificate Authority is used for etcd", index, subIndex))

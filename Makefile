@@ -93,3 +93,7 @@ test.dcos.controller-manager:
 .PHONY: test.dcos.etcd
 test.dcos.etcd:
 	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=etcd test.dcos.remote
+
+.PHONY: test.dcos.kubelet
+test.dcos.kubelet:
+	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=kubelet test.dcos.remote

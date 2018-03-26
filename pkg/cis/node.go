@@ -15,29 +15,16 @@
 package cis
 
 import (
-	"fmt"
-	"testing"
-
 	. "github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/reporters"
-	. "github.com/onsi/gomega"
 
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/node"
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
 )
 
-const CISVersion = "1.2.0"
-
-func CISDescribe(text string, body func()) bool {
-	return Describe(fmt.Sprintf("[CIS Kubernetes %s] %s", CISVersion, text), body)
-}
-
-func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*testing.T) {
-	describeControlPlane(missingProcFunc)
-	describeNode(missingProcFunc)
-
-	return func(t *testing.T) {
-		RegisterFailHandler(Fail)
-		junitReporter := reporters.NewJUnitReporter("junit.xml")
-		RunSpecsWithDefaultAndCustomReporters(t, "Kubernetes CIS benchmark", []Reporter{junitReporter})
-	}
+func describeNode(missingProcFunc framework.MissingProcessHandlerFunc) {
+	CISDescribe("[2] Node", func() {
+		Context("[2.1] Kubelet", func() {
+			node.Kubelet(2, 1, missingProcFunc)
+		})
+	})
 }
