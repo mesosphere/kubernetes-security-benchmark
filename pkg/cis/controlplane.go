@@ -38,5 +38,8 @@ func describeControlPlane(missingProcFunc framework.MissingProcessHandlerFunc) {
 		Context("[1.5] etcd", func() {
 			controlplane.Etcd(1, 5, missingProcFunc)
 		})
+		Context("[1.6] General Security Primitives", func() {
+			controlplane.GeneralSecurityPrimitives(1, 6, missingProcFunc)
+		})
 	})
 }
