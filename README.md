@@ -29,18 +29,21 @@ publishes [a benchmark for Kubernetes](https://www.cisecurity.org/benchmark/kube
 Tests are specified against the various components of a Kubernetes deployment and as such need to be run on the machine (container, VM, or bare-metal) that the component is running on. This project enables a very flexible way to run these tests to match your deployment.
 
 ```shell
-$ kubernetes-security-benchmark cis --help
-Run Kubernetes CIS Benchmark tests.
+$ Run Kubernetes CIS Benchmark tests.
 
 Usage:
   kubernetes-security-benchmark cis [flags]
   kubernetes-security-benchmark cis [command]
 
 Available Commands:
-  api-server         Run the API server specific benchmarks
-  controller-manager Run the controller manager specific benchmarks
-  scheduler          Run the scheduler specific benchmarks
-  version            Prints the version of the Kubernetes CIS Benchmark
+  api-server                  Run the API server specific benchmarks
+  configuration-files         Run the configuration files specific benchmarks
+  controller-manager          Run the controller manager specific benchmarks
+  etcd                        Run the etcd specific benchmarks
+  general-security-primitives Run the general security primitives specific benchmarks
+  kubelet                     Run the kubelet specific benchmarks
+  scheduler                   Run the scheduler specific benchmarks
+  version                     Prints the version of the Kubernetes CIS Benchmark
 
 Flags:
   -h, --help                           help for cis
@@ -56,7 +59,7 @@ Flags:
       --spec.progress                  If set, ginkgo will emit progress information as each spec runs to the GinkgoWriter.
       --spec.randomizeAllSpecs         If set, ginkgo will randomize all specs together.  By default, ginkgo only randomizes the top level Describe, Context and When groups.
       --spec.regexScansFilePath        If set, ginkgo regex matching also will look at the file path (code location).
-      --spec.seed int                  The seed used to randomize the spec suite. (default 1522059137)
+      --spec.seed int                  The seed used to randomize the spec suite. (default 1522082832)
       --spec.skip string               If set, ginkgo will only run specs that do not match this regular expression.
       --spec.skipMeasurements          If set, ginkgo will skip any measurement specs.
       --spec.slowSpecThreshold float   (in seconds) Specs that take longer to run than this threshold are flagged as slow by the default reporter. (default 5)
