@@ -35,5 +35,8 @@ func describeControlPlane(missingProcFunc framework.MissingProcessHandlerFunc) {
 		Context("[1.4] Configuration Files", func() {
 			controlplane.ConfigurationFiles(1, 4, missingProcFunc)
 		})
+		Context("[1.5] etcd", func() {
+			controlplane.Etcd(1, 5, missingProcFunc)
+		})
 	})
 }

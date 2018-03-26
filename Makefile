@@ -89,3 +89,7 @@ test.dcos.scheduler:
 .PHONY: test.dcos.controller-manager
 test.dcos.controller-manager:
 	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=controller-manager test.dcos.remote
+
+.PHONY: test.dcos.etcd
+test.dcos.etcd:
+	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=etcd test.dcos.remote

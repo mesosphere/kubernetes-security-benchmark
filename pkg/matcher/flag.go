@@ -38,6 +38,12 @@ func HaveFlagWithValue(name, value string) types.GomegaMatcher {
 	})
 }
 
+func HaveFlagWithOptionalValue(name, value string) types.GomegaMatcher {
+	return MatchElements(flagID, IgnoreExtras, Elements{
+		name: MatchRegexp("^%s(?:=%s)?$", name, value),
+	})
+}
+
 func HaveFlagWithDifferentValue(name, value string) types.GomegaMatcher {
 	return Not(MatchElements(flagID, IgnoreExtras, Elements{
 		name: Equal(name + "=" + value),
