@@ -46,6 +46,7 @@ Flags:
   -h, --help                           help for cis
       --spec.dryRun                    If set, ginkgo will walk the test hierarchy without actually running anything.  Best paired with -v.
       --spec.failFast                  If set, ginkgo will stop running a test suite after a failure occurs.
+      --spec.failOnMissingProcess      Whether the tests should fail if the relevant process is not running
       --spec.failOnPending             If set, ginkgo will mark the test suite as failed if any specs are pending.
       --spec.flakeAttempts int         Make up to this many attempts to run each spec. Please note that if any of the attempts succeed, the suite will not be failed. But any failures will still be recorded. (default 1)
       --spec.focus string              If set, ginkgo will only run specs that match this regular expression.
