@@ -27,6 +27,7 @@ const controllerManagerProcessName = "kube-controller-manager"
 
 func ControllerManager(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
 	f := framework.New(controllerManagerProcessName, missingProcessFunc)
+	BeforeEach(f.BeforeEach)
 
 	PIt(fmt.Sprintf("[%d.%d.1] Ensure that the --terminated-pod-gc-threshold argument is set as appropriate", index, subIndex))
 

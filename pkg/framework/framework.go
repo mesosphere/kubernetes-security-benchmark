@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"path/filepath"
 
-	. "github.com/onsi/ginkgo"
 	"github.com/shirou/gopsutil/process"
 )
 
@@ -47,12 +46,10 @@ func New(processName string, missingProcessFunc MissingProcessHandlerFunc) *Fram
 		missingProcessFunc: missingProcessFunc,
 	}
 
-	BeforeEach(f.beforeEach)
-
 	return f
 }
 
-func (f *Framework) beforeEach() {
+func (f *Framework) BeforeEach() {
 	if f.Process == nil {
 		f.missingProcessFunc(fmt.Sprintf("%s is not running", f.ProcessName))
 	}
