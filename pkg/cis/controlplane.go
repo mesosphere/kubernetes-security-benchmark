@@ -32,5 +32,8 @@ func describeControlPlane(missingProcFunc framework.MissingProcessHandlerFunc) {
 		Context("[1.3] Controller Manager", func() {
 			controlplane.ControllerManager(1, 3, missingProcFunc)
 		})
+		Context("[1.4] Configuration Files", func() {
+			controlplane.ConfigurationFiles(1, 4, missingProcFunc)
+		})
 	})
 }
