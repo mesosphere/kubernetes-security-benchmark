@@ -34,6 +34,7 @@ func CISDescribe(text string, body func()) bool {
 func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*testing.T) {
 	describeControlPlane(missingProcFunc)
 	describeNode(missingProcFunc)
+	describeFederatedDeployment(missingProcFunc)
 
 	return func(t *testing.T) {
 		RegisterFailHandler(Fail)

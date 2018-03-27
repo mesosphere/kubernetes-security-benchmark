@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package cis
 
 import (
-	"github.com/onsi/ginkgo/config"
-	"github.com/spf13/cobra"
+	. "github.com/onsi/ginkgo"
+
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/federated"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
 )
 
-// cisConfigurationFilesCmd represents the configuration-files command
-var cisConfigurationFilesCmd = &cobra.Command{
-	Use:   "configuration-files",
-	Short: "Run the configuration files specific benchmarks",
-	Long:  `Run the configuration files specific benchmarks.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		config.GinkgoConfig.FocusString = `\[1\.4\]`
-		cisCmd.Run(cmd, args)
-	},
-}
-
-func init() {
-	cisCmd.AddCommand(cisConfigurationFilesCmd)
+func describeFederatedDeployment(missingProcFunc framework.MissingProcessHandlerFunc) {
+	CISDescribe("[3] Federated Deployments", func() {
+		Context("[3.1] Kubelet", func() {
+			federated.APIServer(3, 1, missingProcFunc)
+		})
+	})
 }
