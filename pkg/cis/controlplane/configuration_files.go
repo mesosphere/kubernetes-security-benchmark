@@ -203,44 +203,58 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 	})
 
 	Context("", func() {
-		const schedulerFilePath = "/etc/kubernetes/scheduler.conf"
-		BeforeEach(func() {
-			_, err := os.Stat(schedulerFilePath)
-			if err != nil {
-				if os.IsNotExist(err) {
-					Skip(fmt.Sprintf("%s does not exist", schedulerFilePath))
-				}
-				Expect(err).NotTo(HaveOccurred())
-			}
+		var kubeconfigFilePath string
+
+		assertKubeconfigFilePermissions := func() func() {
+			return func() { Expect(kubeconfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644))) }
+		}
+
+		assertKubeconfigFileOwnership := func() func() {
+			return func() { Expect(kubeconfigFilePath).To(BeOwnedBy("root", "root")) }
+		}
+
+		kubeconfigFlagContext := func(processName string, body func()) {
+			Context("", func() {
+				f := framework.New(processName, missingProcessFunc)
+				BeforeEach(f.BeforeEach)
+
+				Context("", func() {
+					BeforeEach(func() {
+						kubeConfigFile, fileExists, err := util.FilePathFromFlag(f.Process, "kubeconfig")
+						Expect(err).NotTo(HaveOccurred())
+						if !fileExists {
+							Skip(fmt.Sprintf("%s does not exist", kubeConfigFile))
+						}
+						kubeconfigFilePath = kubeConfigFile
+					})
+
+					body()
+				})
+			})
+		}
+
+		kubeconfigFlagContext("kube-scheduler", func() {
+			It(
+				fmt.Sprintf("[%d.%d.15] Ensure that the scheduler.conf file permissions are set to 644 or more restrictive", index, subIndex),
+				assertKubeconfigFilePermissions(),
+			)
+
+			It(
+				fmt.Sprintf("[%d.%d.16] Ensure that the scheduler.conf file ownership is set to root:root", index, subIndex),
+				assertKubeconfigFileOwnership(),
+			)
 		})
 
-		It(fmt.Sprintf("[%d.%d.15] Ensure that the scheduler.conf file permissions are set to 644 or more restrictive", index, subIndex), func() {
-			Expect(schedulerFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
-		})
+		kubeconfigFlagContext("kube-controller-manager", func() {
+			It(
+				fmt.Sprintf("[%d.%d.17] Ensure that the controller-manager.conf file permissions are set to 644 or more restrictive", index, subIndex),
+				assertKubeconfigFilePermissions(),
+			)
 
-		It(fmt.Sprintf("[%d.%d.16] Ensure that the scheduler.conf file ownership is set to root:root", index, subIndex), func() {
-			Expect(schedulerFilePath).To(BeOwnedBy("root", "root"))
-		})
-	})
-
-	Context("", func() {
-		const controllerManagerFilePath = "/etc/kubernetes/controller-manager.conf"
-		BeforeEach(func() {
-			_, err := os.Stat(controllerManagerFilePath)
-			if err != nil {
-				if os.IsNotExist(err) {
-					Skip(fmt.Sprintf("%s does not exist", controllerManagerFilePath))
-				}
-				Expect(err).NotTo(HaveOccurred())
-			}
-		})
-
-		It(fmt.Sprintf("[%d.%d.17] Ensure that the controller-manager.conf file permissions are set to 644 or more restrictive", index, subIndex), func() {
-			Expect(controllerManagerFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
-		})
-
-		It(fmt.Sprintf("[%d.%d.18] Ensure that the controller-manager.conf file ownership is set to root:root", index, subIndex), func() {
-			Expect(controllerManagerFilePath).To(BeOwnedBy("root", "root"))
+			It(
+				fmt.Sprintf("[%d.%d.18] Ensure that the controller-manager.conf file ownership is set to root:root", index, subIndex),
+				assertKubeconfigFileOwnership(),
+			)
 		})
 	})
 }

@@ -16,6 +16,8 @@ package util
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/shirou/gopsutil/process"
@@ -30,9 +32,34 @@ func FlagValueFromProcess(p *process.Process, flagName string) (interface{}, err
 	flagPrefix := fmt.Sprintf("--%s=", flagName)
 	for _, f := range cmdline {
 		if strings.HasPrefix(f, flagPrefix) {
-			return f[len(flagPrefix)], nil
+			return f[len(flagPrefix):], nil
 		}
 	}
 
 	return "", nil
+}
+
+func FilePathFromFlag(p *process.Process, flagName string) (path string, exists bool, err error) {
+	v, err := FlagValueFromProcess(p, flagName)
+	if err != nil {
+		return "", false, err
+	}
+	fp := v.(string)
+	if !filepath.IsAbs(fp) {
+		processCwd, err := p.Cwd()
+		if err != nil {
+			return "", false, err
+		}
+		fp = filepath.Join(processCwd, fp)
+	}
+
+	_, err = os.Stat(fp)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fp, false, nil
+		}
+		return fp, false, err
+	}
+
+	return fp, true, nil
 }

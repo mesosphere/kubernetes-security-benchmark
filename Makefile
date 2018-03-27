@@ -97,3 +97,11 @@ test.dcos.etcd:
 .PHONY: test.dcos.kubelet
 test.dcos.kubelet:
 	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=kubelet test.dcos.remote
+
+.PHONY: test.dcos.configuration-files.scheduler
+test.dcos.configuration-files.scheduler:
+	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=configuration-files test.dcos.remote
+
+.PHONY: test.dcos.configuration-files.controller-manager
+test.dcos.configuration-files.controller-manager:
+	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=configuration-files test.dcos.remote
