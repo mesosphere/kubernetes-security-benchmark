@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cis
+package federated
 
 import (
+	"fmt"
+
 	. "github.com/onsi/ginkgo"
 
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/federated"
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
+	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/matcher"
 )
 
-func describeFederatedDeployment(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[3] Federated Deployments", func() {
-		Context("[3.1] Federation API Server", func() {
-			federated.APIServer(3, 1, missingProcFunc)
-		})
-		Context("[3.2] Federation Controller Manager", func() {
-			federated.ControllerManager(3, 2, missingProcFunc)
-		})
+const controllerManagerProcessName = "federation-controller-manager"
+
+func ControllerManager(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+	f := framework.New(controllerManagerProcessName, missingProcessFunc)
+	BeforeEach(f.BeforeEach)
+
+	It(fmt.Sprintf("[%d.%d.1] Ensure that the --profiling argument is set to false", index, subIndex), func() {
+		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
 	})
 }

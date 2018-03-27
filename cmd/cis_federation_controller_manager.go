@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cis
+package cmd
 
 import (
-	. "github.com/onsi/ginkgo"
-
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/federated"
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
+	"github.com/onsi/ginkgo/config"
+	"github.com/spf13/cobra"
 )
 
-func describeFederatedDeployment(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[3] Federated Deployments", func() {
-		Context("[3.1] Federation API Server", func() {
-			federated.APIServer(3, 1, missingProcFunc)
-		})
-		Context("[3.2] Federation Controller Manager", func() {
-			federated.ControllerManager(3, 2, missingProcFunc)
-		})
-	})
+// cisFederationControllerManagerCmd represents the federation-controller-manager command
+var cisFederationControllerManagerCmd = &cobra.Command{
+	Use:   "federation-controller-manager",
+	Short: "Run the federation controller manager specific benchmarks",
+	Long:  `Run the federation controller manager specific benchmarks.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		config.GinkgoConfig.FocusString = `\[3\.2\]`
+		cisCmd.Run(cmd, args)
+	},
+}
+
+func init() {
+	cisCmd.AddCommand(cisFederationControllerManagerCmd)
 }
