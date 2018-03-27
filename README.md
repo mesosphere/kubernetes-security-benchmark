@@ -37,17 +37,10 @@ Usage:
   kubernetes-security-benchmark cis [command]
 
 Available Commands:
-  api-server                        Run the API server specific benchmarks
-  control-plane-configuration-files Run the control plane configuration files specific benchmarks
-  controller-manager                Run the controller manager specific benchmarks
-  etcd                              Run the etcd specific benchmarks
-  federation-api-server             Run the federation API server specific benchmarks
-  federation-controller-manager     Run the federation controller manager specific benchmarks
-  general-security-primitives       Run the general security primitives specific benchmarks
-  kubelet                           Run the kubelet specific benchmarks
-  node-configuration-files          Run the node configuration files specific benchmarks
-  scheduler                         Run the scheduler specific benchmarks
-  version                           Prints the version of the Kubernetes CIS Benchmark
+  control-plane Run the control plane specific benchmarks
+  federation    Run the federation specific benchmarks
+  node          Run the node specific benchmarks
+  version       Prints the version of the Kubernetes CIS Benchmark
 
 Flags:
   -h, --help                           help for cis
@@ -99,7 +92,7 @@ $ kubernetes-security-benchmark cis --spec.focus='\[1\.1\.1\]'
 As a convenience, subcommands are provided to run targeted test suites against specific components, e.g.:
 
 ```shell
-$ kubernetes-security-benchmark cis api-server
+$ kubernetes-security-benchmark cis control-plane api-server
 ```
 
 This is easier to remember than the equivalent command:
@@ -107,3 +100,22 @@ This is easier to remember than the equivalent command:
 ```shell
 $ kubernetes-security-benchmark cis --spec.focus='\[1\.1\]'
 ```
+
+#### Subcommands
+
+Here is a full list of the subcommands available:
+
+* `kubernetes-security-benchmark cis`
+  * `kubernetes-security-benchmark cis control-plane`
+    * `kubernetes-security-benchmark cis control-plane api-server`
+    * `kubernetes-security-benchmark cis control-plane configuration-files`
+    * `kubernetes-security-benchmark cis control-plane controller-manager`
+    * `kubernetes-security-benchmark cis control-plane etcd`
+    * `kubernetes-security-benchmark cis control-plane general-security-primitives`
+    * `kubernetes-security-benchmark cis control-plane scheduler`
+  * `kubernetes-security-benchmark cis federation`
+    * `kubernetes-security-benchmark cis federation api-server`
+    * `kubernetes-security-benchmark cis federation controller-manager`
+  * `kubernetes-security-benchmark cis node`
+    * `kubernetes-security-benchmark cis node configuration-files`
+    * `kubernetes-security-benchmark cis node kubelet`
