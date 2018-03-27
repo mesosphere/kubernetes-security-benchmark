@@ -29,21 +29,25 @@ publishes [a benchmark for Kubernetes](https://www.cisecurity.org/benchmark/kube
 Tests are specified against the various components of a Kubernetes deployment and as such need to be run on the machine (container, VM, or bare-metal) that the component is running on. This project enables a very flexible way to run these tests to match your deployment.
 
 ```shell
-$ Run Kubernetes CIS Benchmark tests.
+$ kubernetes-security-benchmark cis --help
+Run Kubernetes CIS Benchmark tests.
 
 Usage:
   kubernetes-security-benchmark cis [flags]
   kubernetes-security-benchmark cis [command]
 
 Available Commands:
-  api-server                  Run the API server specific benchmarks
-  configuration-files         Run the configuration files specific benchmarks
-  controller-manager          Run the controller manager specific benchmarks
-  etcd                        Run the etcd specific benchmarks
-  general-security-primitives Run the general security primitives specific benchmarks
-  kubelet                     Run the kubelet specific benchmarks
-  scheduler                   Run the scheduler specific benchmarks
-  version                     Prints the version of the Kubernetes CIS Benchmark
+  api-server                        Run the API server specific benchmarks
+  control-plane-configuration-files Run the control plane configuration files specific benchmarks
+  controller-manager                Run the controller manager specific benchmarks
+  etcd                              Run the etcd specific benchmarks
+  federation-api-server             Run the federation API server specific benchmarks
+  federation-controller-manager     Run the federation controller manager specific benchmarks
+  general-security-primitives       Run the general security primitives specific benchmarks
+  kubelet                           Run the kubelet specific benchmarks
+  node-configuration-files          Run the node configuration files specific benchmarks
+  scheduler                         Run the scheduler specific benchmarks
+  version                           Prints the version of the Kubernetes CIS Benchmark
 
 Flags:
   -h, --help                           help for cis
