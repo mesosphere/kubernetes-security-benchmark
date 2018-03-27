@@ -65,7 +65,7 @@ clean:
 test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager)
 
 .PHONY: test.dcos.remote
-test.dcos.remote: build
+test.dcos.remote:
 ifndef DCOS_TASK
 	$(error "Missing DCOS_TASK variable")
 endif
@@ -79,37 +79,37 @@ endif
 	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(CIS_FOCUS).xml
 
 .PHONY: test.dcos.apiserver
-test.dcos.apiserver:
+test.dcos.apiserver: build
 	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance CIS_FOCUS=api-server test.dcos.remote
 
 .PHONY: test.dcos.scheduler
-test.dcos.scheduler:
+test.dcos.scheduler: build
 	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=scheduler test.dcos.remote
 
 .PHONY: test.dcos.controller-manager
-test.dcos.controller-manager:
+test.dcos.controller-manager: build
 	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=controller-manager test.dcos.remote
 
 .PHONY: test.dcos.etcd
-test.dcos.etcd:
+test.dcos.etcd: build
 	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=etcd test.dcos.remote
 
 .PHONY: test.dcos.kubelet
-test.dcos.kubelet:
+test.dcos.kubelet: build
 	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=kubelet test.dcos.remote
 
 .PHONY: test.dcos.configuration-files.scheduler
-test.dcos.configuration-files.scheduler:
+test.dcos.configuration-files.scheduler: build
 	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=control-plane-configuration-files test.dcos.remote
 
 .PHONY: test.dcos.configuration-files.controller-manager
-test.dcos.configuration-files.controller-manager:
+test.dcos.configuration-files.controller-manager: build
 	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=control-plane-configuration-files test.dcos.remote
 
 .PHONY: test.dcos.configuration-files.node
-test.dcos.configuration-files.node:
+test.dcos.configuration-files.node: build
 	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=node-configuration-files test.dcos.remote
 
 .PHONY: test.dcos.configuration-files.kube-proxy
-test.dcos.configuration-files.kube-proxy:
+test.dcos.configuration-files.kube-proxy: build
 	@$(MAKE) DCOS_TASK=kube-node-0-kube-proxy CIS_FOCUS=node-configuration-files test.dcos.remote
