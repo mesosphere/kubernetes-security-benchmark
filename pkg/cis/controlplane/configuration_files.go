@@ -23,7 +23,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
-	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/matcher"
+	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/ginkgo/matchers"
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/util"
 )
 

@@ -20,7 +20,7 @@ import (
 	. "github.com/onsi/ginkgo"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
-	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/matcher"
+	. "github.com/mesosphere/kubernetes-security-benchmark/pkg/ginkgo/matchers"
 )
 
 const kubeletProcessName = "kubelet"
