@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisControllerManagerCmd represents the cis controller-manager command
+// cisControllerManagerCmd represents the cis control-plane controller-manager command
 var cisControllerManagerCmd = &cobra.Command{
 	Use:   "controller-manager",
 	Short: "Run the controller manager specific benchmarks",
@@ -31,5 +31,5 @@ var cisControllerManagerCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisControllerManagerCmd)
+	cisControlPlaneCmd.AddCommand(cisControllerManagerCmd)
 }

@@ -19,9 +19,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisNodeConfigurationFilesCmd represents the cis node-configuration-files command
+// cisNodeConfigurationFilesCmd represents the cis node configuration-files command
 var cisNodeConfigurationFilesCmd = &cobra.Command{
-	Use:   "node-configuration-files",
+	Use:   "configuration-files",
 	Short: "Run the node configuration files specific benchmarks",
 	Long:  `Run the node configuration files specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -31,5 +31,5 @@ var cisNodeConfigurationFilesCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisNodeConfigurationFilesCmd)
+	cisNodeCmd.AddCommand(cisNodeConfigurationFilesCmd)
 }

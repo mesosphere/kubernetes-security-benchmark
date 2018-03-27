@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisGeneralSecurityPrimitivesCmd represents the cis general-security-primitives command
+// cisGeneralSecurityPrimitivesCmd represents the cis control-plane general-security-primitives command
 var cisGeneralSecurityPrimitivesCmd = &cobra.Command{
 	Use:   "general-security-primitives",
 	Short: "Run the general security primitives specific benchmarks",
@@ -31,5 +31,5 @@ var cisGeneralSecurityPrimitivesCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisGeneralSecurityPrimitivesCmd)
+	cisControlPlaneCmd.AddCommand(cisGeneralSecurityPrimitivesCmd)
 }

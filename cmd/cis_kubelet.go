@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisKubeletCmd represents the cis kubelet command
+// cisKubeletCmd represents the cis node kubelet command
 var cisKubeletCmd = &cobra.Command{
 	Use:   "kubelet",
 	Short: "Run the kubelet specific benchmarks",
@@ -31,5 +31,5 @@ var cisKubeletCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisKubeletCmd)
+	cisNodeCmd.AddCommand(cisKubeletCmd)
 }

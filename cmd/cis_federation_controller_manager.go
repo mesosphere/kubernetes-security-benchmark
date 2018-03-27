@@ -19,9 +19,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisFederationControllerManagerCmd represents the federation-controller-manager command
+// cisFederationControllerManagerCmd represents the cis federation controller-manager command
 var cisFederationControllerManagerCmd = &cobra.Command{
-	Use:   "federation-controller-manager",
+	Use:   "controller-manager",
 	Short: "Run the federation controller manager specific benchmarks",
 	Long:  `Run the federation controller manager specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -31,5 +31,5 @@ var cisFederationControllerManagerCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisFederationControllerManagerCmd)
+	cisFederationCmd.AddCommand(cisFederationControllerManagerCmd)
 }

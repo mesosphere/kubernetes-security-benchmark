@@ -19,17 +19,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisEtcdCmd represents the cis control-plane etcd command
-var cisEtcdCmd = &cobra.Command{
-	Use:   "etcd",
-	Short: "Run the etcd specific benchmarks",
-	Long:  `Run the etcd specific benchmarks.`,
+// cisFederationCmd represents the cis federation command
+var cisFederationCmd = &cobra.Command{
+	Use:   "federation",
+	Short: "Run the federation specific benchmarks",
+	Long:  `Run the federation specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config.GinkgoConfig.FocusString = `\[1\.5\]`
+		config.GinkgoConfig.FocusString = `\[3\]`
 		cisCmd.Run(cmd, args)
 	},
 }
 
 func init() {
-	cisControlPlaneCmd.AddCommand(cisEtcdCmd)
+	cisCmd.AddCommand(cisFederationCmd)
 }

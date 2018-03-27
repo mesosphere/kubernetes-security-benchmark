@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisAPIServerCmd represents the cis api-server command
+// cisAPIServerCmd represents the cis control-plane api-server command
 var cisAPIServerCmd = &cobra.Command{
 	Use:   "api-server",
 	Short: "Run the API server specific benchmarks",
@@ -31,5 +31,5 @@ var cisAPIServerCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisAPIServerCmd)
+	cisControlPlaneCmd.AddCommand(cisAPIServerCmd)
 }

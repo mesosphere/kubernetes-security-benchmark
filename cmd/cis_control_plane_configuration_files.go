@@ -19,9 +19,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisConfigurationFilesCmd represents the configuration-files command
+// cisConfigurationFilesCmd represents the cis control-plane configuration-files command
 var cisConfigurationFilesCmd = &cobra.Command{
-	Use:   "control-plane-configuration-files",
+	Use:   "configuration-files",
 	Short: "Run the control plane configuration files specific benchmarks",
 	Long:  `Run the control plane configuration files specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -31,5 +31,5 @@ var cisConfigurationFilesCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisConfigurationFilesCmd)
+	cisControlPlaneCmd.AddCommand(cisConfigurationFilesCmd)
 }

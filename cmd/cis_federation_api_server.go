@@ -19,9 +19,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisFederationAPIServerCmd represents the federation-api-server command
+// cisFederationAPIServerCmd represents the cis federation api-server command
 var cisFederationAPIServerCmd = &cobra.Command{
-	Use:   "federation-api-server",
+	Use:   "api-server",
 	Short: "Run the federation API server specific benchmarks",
 	Long:  `Run the federation API server specific benchmarks.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -31,5 +31,5 @@ var cisFederationAPIServerCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisFederationAPIServerCmd)
+	cisFederationCmd.AddCommand(cisFederationAPIServerCmd)
 }

@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// cisSchedulerCmd represents the cis scheduler command
+// cisSchedulerCmd represents the cis control-plane scheduler command
 var cisSchedulerCmd = &cobra.Command{
 	Use:   "scheduler",
 	Short: "Run the scheduler specific benchmarks",
@@ -31,5 +31,5 @@ var cisSchedulerCmd = &cobra.Command{
 }
 
 func init() {
-	cisCmd.AddCommand(cisSchedulerCmd)
+	cisControlPlaneCmd.AddCommand(cisSchedulerCmd)
 }
