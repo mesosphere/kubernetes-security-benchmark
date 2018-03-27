@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cis
+package cmd
 
 import (
-	. "github.com/onsi/ginkgo"
-
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis/node"
-	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
+	"github.com/onsi/ginkgo/config"
+	"github.com/spf13/cobra"
 )
 
-func describeNode(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[2] Node", func() {
-		Context("[2.1] Kubelet", func() {
-			node.Kubelet(2, 1, missingProcFunc)
-		})
-		Context("[2.2] Configuration Files", func() {
-			node.ConfigurationFiles(2, 2, missingProcFunc)
-		})
-	})
+// cisNodeConfigurationFilesCmd represents the cis node-configuration-files command
+var cisNodeConfigurationFilesCmd = &cobra.Command{
+	Use:   "node-configuration-files",
+	Short: "Run the node configuration files specific benchmarks",
+	Long:  `Run the node configuration files specific benchmarks.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		config.GinkgoConfig.FocusString = `\[2\.2\]`
+		cisCmd.Run(cmd, args)
+	},
+}
+
+func init() {
+	cisCmd.AddCommand(cisNodeConfigurationFilesCmd)
 }

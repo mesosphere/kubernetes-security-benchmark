@@ -105,3 +105,11 @@ test.dcos.configuration-files.scheduler:
 .PHONY: test.dcos.configuration-files.controller-manager
 test.dcos.configuration-files.controller-manager:
 	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=configuration-files test.dcos.remote
+
+.PHONY: test.dcos.configuration-files.node
+test.dcos.configuration-files.node:
+	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=node-configuration-files test.dcos.remote
+
+.PHONY: test.dcos.configuration-files.kube-proxy
+test.dcos.configuration-files.kube-proxy:
+	@$(MAKE) DCOS_TASK=kube-node-0-kube-proxy CIS_FOCUS=node-configuration-files test.dcos.remote
