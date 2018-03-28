@@ -18,6 +18,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/onsi/ginkgo/config"
 	"github.com/onsi/ginkgo/types"
@@ -134,9 +136,20 @@ func (r *JSONReporter) SpecWillRun(specSummary *types.SpecSummary) {
 
 }
 
+var (
+	matchLeadingAndTrailingSpaces = regexp.MustCompile(`^[\s\p{Zs}]+|[\s\p{Zs}]+$`)
+	matchDoubleSpaces             = regexp.MustCompile(`[\s\p{Zs}]{2,}`)
+)
+
+func (r *JSONReporter) normalizeSpaces(input string) string {
+	final := matchLeadingAndTrailingSpaces.ReplaceAllString(input, "")
+	final = matchDoubleSpaces.ReplaceAllString(final, " ")
+	return final
+}
+
 func (r *JSONReporter) SpecDidComplete(specSummary *types.SpecSummary) {
 	spec := JSONTestCase{
-		Name:              specSummary.ComponentTexts[len(specSummary.ComponentTexts)-1],
+		Name:              r.normalizeSpaces(strings.Join(specSummary.ComponentTexts[1:], " ")),
 		Result:            r.failureTypeForState(specSummary.State),
 		Message:           specSummary.Failure.Message,
 		SystemOut:         specSummary.CapturedOutput,
