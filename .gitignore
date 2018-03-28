@@ -4,5 +4,6 @@ kubernetes-security-benchmark
 .go
 .vendor
 junit*.xml
+cis.json
 results/
 out/

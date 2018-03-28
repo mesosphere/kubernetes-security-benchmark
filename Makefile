@@ -77,6 +77,8 @@ endif
 	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(CIS_FOCUS).txt || true
 	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/junit.$(CIS_FOCUS).xml"
 	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(CIS_FOCUS).xml
+	@echo "Retrieving json results from $(DCOS_TASK) into $(CURDIR)/results/cis.$(CIS_FOCUS).json"
+	@dcos task exec -i $(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/cis.$(CIS_FOCUS).json
 
 .PHONY: test.dcos.apiserver
 test.dcos.apiserver: build

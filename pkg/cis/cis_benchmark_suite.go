@@ -19,10 +19,11 @@ import (
 	"testing"
 
 	. "github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/reporters"
+	corereporters "github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/ginkgo/reporters"
 )
 
 const CISVersion = "1.2.0"
@@ -38,7 +39,12 @@ func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*tes
 
 	return func(t *testing.T) {
 		RegisterFailHandler(Fail)
-		junitReporter := reporters.NewJUnitReporter("junit.xml")
-		RunSpecsWithDefaultAndCustomReporters(t, "Kubernetes CIS benchmark", []Reporter{junitReporter})
+		junitReporter := corereporters.NewJUnitReporter("junit.xml")
+		jsonReporter := reporters.NewJSONReporter("cis.json")
+		RunSpecsWithDefaultAndCustomReporters(
+			t,
+			"Kubernetes CIS benchmark",
+			[]Reporter{junitReporter, jsonReporter},
+		)
 	}
 }
