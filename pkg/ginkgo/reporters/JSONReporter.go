@@ -68,7 +68,7 @@ const (
 
 type JSONTestCase struct {
 	Name              string     `json:"name"`
-	Message           string     `string:"message,omitempty"`
+	Message           string     `json:"message,omitempty"`
 	Result            SpecResult `json:"result"`
 	Time              float64    `json:"time"`
 	SystemOut         string     `json:"systemOut,omitempty"`
