@@ -24,7 +24,7 @@ BUILD_DATE := $(shell date -u)
 VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty --always)
 
 DCOS_TASK ?= kube-apiserver-0-instance
-CIS_FOCUS ?= api-server
+CIS_FOCUS ?=
 
 .PHONY: build
 build: out/$(BINARYNAME)
@@ -62,56 +62,44 @@ clean:
 	@rm -rf vendor .vendor $(GOPATH) .gopath .gopath.prepare results out
 
 .PHONY: test.dcos
-test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager)
+test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager etcd kubelet kube-proxy)
 
 .PHONY: test.dcos.remote
 test.dcos.remote:
 ifndef DCOS_TASK
 	$(error "Missing DCOS_TASK variable")
 endif
-	@mkdir -p $(CURDIR)/results/
+	@mkdir -p $(CURDIR)/results/$(DCOS_TASK)
 	@echo "Copying binary to $(DCOS_TASK)"
 	@cat out/$(BINARYNAME) | dcos task exec -i $(DCOS_TASK) bash -c "cat > $(BINARYNAME)"
 	@dcos task exec $(DCOS_TASK) chmod +x $(BINARYNAME)
 	@echo "Running tests on $(DCOS_TASK)"
-	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(CIS_FOCUS).txt || true
-	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/junit.$(CIS_FOCUS).xml"
-	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/junit.$(CIS_FOCUS).xml
-	@echo "Retrieving json results from $(DCOS_TASK) into $(CURDIR)/results/cis.$(CIS_FOCUS).json"
-	@dcos task exec -i $(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/cis.$(CIS_FOCUS).json
+	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(DCOS_TASK)/stdout.txt || true
+	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/$(DCOS_TASK)/junit.xml"
+	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/$(DCOS_TASK)/junit.xml
+	@echo "Retrieving json results from $(DCOS_TASK) into $(CURDIR)/results/$(DCOS_TASK)/cis.json"
+	@dcos task exec -i $(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/$(DCOS_TASK)/cis.json
 
 .PHONY: test.dcos.apiserver
 test.dcos.apiserver: build
-	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance CIS_FOCUS=api-server test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.scheduler
 test.dcos.scheduler: build
-	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=scheduler test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.controller-manager
 test.dcos.controller-manager: build
-	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=controller-manager test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.etcd
 test.dcos.etcd: build
-	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=etcd test.dcos.remote
+	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.kubelet
 test.dcos.kubelet: build
-	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=kubelet test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
-.PHONY: test.dcos.configuration-files.scheduler
-test.dcos.configuration-files.scheduler: build
-	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=control-plane-configuration-files test.dcos.remote
-
-.PHONY: test.dcos.configuration-files.controller-manager
-test.dcos.configuration-files.controller-manager: build
-	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=control-plane-configuration-files test.dcos.remote
-
-.PHONY: test.dcos.configuration-files.node
-test.dcos.configuration-files.node: build
-	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=node-configuration-files test.dcos.remote
-
-.PHONY: test.dcos.configuration-files.kube-proxy
-test.dcos.configuration-files.kube-proxy: build
-	@$(MAKE) DCOS_TASK=kube-node-0-kube-proxy CIS_FOCUS=node-configuration-files test.dcos.remote
+.PHONY: test.dcos.kube-proxy
+test.dcos.kube-proxy: build
+	@$(MAKE) DCOS_TASK=kube-node-0-kube-proxy CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
