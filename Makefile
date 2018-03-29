@@ -72,7 +72,12 @@ test.dcos.aggregate:
 	done ;
 	@jq --slurp -f $(CURDIR)/aggregate.jq $$(find $(CURDIR)/results -name cis-munged.json) > $(CURDIR)/results/cis-aggregated.json
 	@sed -i 's|$(GOPATH)/src/||g' $(CURDIR)/results/cis-aggregated.json
-	go run $(CURDIR)/cmd/aggregated-render/main.go ./results/cis-aggregated.json ./aggregated.html.tmpl $(CURDIR)/results/aggregated.html
+	@go run $(CURDIR)/cmd/aggregated-render/main.go ./results/cis-aggregated.json ./aggregated.html.tmpl $(CURDIR)/results/aggregated.html
+	@if [ `uname` == "Darwin" ]; then \
+		open $(CURDIR)/results/aggregated.html ; \
+	else \
+		xdg-open $(CURDIR)/results/aggregated.html ; \
+	fi
 
 .PHONY: test.dcos.remote
 test.dcos.remote:
