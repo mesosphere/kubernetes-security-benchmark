@@ -10,7 +10,9 @@
   map(reduce .[] as $item ({}; . * $item))
 }] |
   unique |
-  { specs: [
+  { 
+    name: .[].name,
+    specs: [
     .[].specs[] |
       . + {
         result: ([.results[].result] as $results |

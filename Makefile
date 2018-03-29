@@ -72,6 +72,7 @@ test.dcos.aggregate:
 	done ;
 	@jq --slurp -f $(CURDIR)/aggregate.jq $$(find $(CURDIR)/results -name cis-munged.json) > $(CURDIR)/results/cis-aggregated.json
 	@sed -i 's|$(GOPATH)/src/||g' $(CURDIR)/results/cis-aggregated.json
+	go run $(CURDIR)/cmd/aggregated-render/main.go ./results/cis-aggregated.json ./aggregated.html.tmpl $(CURDIR)/results/aggregated.html
 
 .PHONY: test.dcos.remote
 test.dcos.remote:

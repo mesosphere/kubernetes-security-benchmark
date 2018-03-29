@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{.name}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
+    <style>
+      .spec-passed {
+        background-color: #00c851;
+      }
+      .spec-failed {
+        background-color: #ff3547;
+        color: #fff;
+      }
+      .spec-skipped {
+        background-color: #ff8800;
+      }
+      .spec-pending {
+        background-color: #616161;
+        color: #fff;
+      }
+      .spec-panicked {
+        background-color: #8e24aa;
+      }
+      .spec-timeout {
+        background-color: #00d3ee;
+      }
+      .spec-invalid: {
+        background-color: #896052;
+      }
+    </style>
+    <meta charset="UTF-8">
+  </head>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">{{.name}}</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mx-1">
+            <button type="button" class="btn btn-success">
+              Passed <span class="badge badge-light">{{.passed}}</span>
+            </button>
+          </li>
+          <li class="nav-item mx-1">
+            <button type="button" class="btn btn-danger">
+              Failed <span class="badge badge-light">{{.failures}}</span>
+            </button>
+          </li>
+          <li class="nav-item mx-1">
+            <button type="button" class="btn btn-warning">
+              Skipped <span class="badge badge-light">{{.skipped}}</span>
+            </button>
+          </li>
+          <li class="nav-item mx-1">
+            <button type="button" class="btn btn-grey">
+              Pending <span class="badge badge-light">{{.pending}}</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main role="main" class="container">
+      <div class="d-flex align-items-center p-3 my-3 bg-white rounded z-depth-3">
+        <canvas id="specsPieChart"></canvas>
+      </div>{{scratch.Set "openedThisLoop" "true"}}
+      {{range .specs}}{{$currentTopLevel := scratch.Get "topLevel"}}{{$currentSecondLevel := scratch.Get "secondLevel"}}{{$splitName := splitSpecName .name}}{{$thisTopLevel := index $splitName 0}}{{$thisSecondLevel := index $splitName 1}}{{if ne $currentTopLevel $thisTopLevel}}{{if ne (scratch.Get "openedThisLoop") "true"}}
+            </div>{{end}}
+          <div class="my-3 p-3 bg-white rounded z-depth-3">
+            <h4 class="border-bottom border-gray pb-2 mb-0">{{$thisTopLevel}}</h4>{{scratch.Set "openedThisLoop" "true"}}{{end}}{{if ne $currentSecondLevel $thisSecondLevel}}
+            <h5 class="border-bottom border-gray py-2 mb-0">{{$thisSecondLevel}}</h5>
+        {{end}}{{scratch.Set "openedThisLoop" "false"}}{{scratch.Set "topLevel" $thisTopLevel}}{{scratch.Set "secondLevel" $thisSecondLevel}}
+        <div class="media spec-{{.result}} pt-3">
+          <p class="media-body pb-3 px-3 mb-0 border-bottom border-gray">
+            <strong class="d-block">{{index $splitName 2}}</strong>
+          </p>
+        </div>
+      {{end}}
+      </div>
+    </main>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
+    <script>
+      (function() {
+        var ctxP = document.getElementById("specsPieChart");
+        var myPieChart = new Chart(ctxP, {
+          type: 'pie',
+          data: {
+            labels: ["Passed", "Failed", "Skipped", "Pending", "Panicked", "Timed out", "Invalid"],
+            datasets: [{
+              data: [ {{.passed}} ,  {{.failures}} ,  {{.skipped}} ,  {{.pending}} ,  {{.panicked}} ,  {{.timeout}} ,  {{.invalid}} ],
+              backgroundColor: ["#00c851", "#ff3547", "#ff8800", "#616161", "#8e24aa", "#00d3ee", "#896052"],
+              hoverBackgroundColor: ["#007e33", "#cc0000", "#995200", "#2e2e2e", "#481256", "#00626e", "#392822"]
+            }]
+          },
+          options: {
+            responsive: true,
+            animation: {
+              animateScale: true,
+              animateRotate: true
+            }
+          }
+        });
+      }());
+    </script>
+  </body>
+</html>
