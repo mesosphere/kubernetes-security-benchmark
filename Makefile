@@ -62,7 +62,16 @@ clean:
 	@rm -rf vendor .vendor $(GOPATH) .gopath .gopath.prepare results out
 
 .PHONY: test.dcos
-test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager etcd kubelet kube-proxy)
+test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager etcd kubelet kube-proxy) test.dcos.aggregate
+
+.PHONY: test.dcos.aggregate
+test.dcos.aggregate:
+	@for f in $$(find $(CURDIR)/results -name cis.json); do \
+		directory_name=$$(basename `dirname $${f}`) ; \
+		jq ".specs |= ([.[] | {name: .name, results: {\"$${directory_name}\": del(.name)}}])" $${f} > $(CURDIR)/results/$${directory_name}/cis-munged.json ; \
+	done ;
+	@jq --slurp -f $(CURDIR)/aggregate.jq $$(find $(CURDIR)/results -name cis-munged.json) > $(CURDIR)/results/cis-aggregated.json
+	@sed -i 's|$(GOPATH)/src/||g' $(CURDIR)/results/cis-aggregated.json
 
 .PHONY: test.dcos.remote
 test.dcos.remote:
