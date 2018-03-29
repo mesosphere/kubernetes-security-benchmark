@@ -22,24 +22,24 @@ import (
 )
 
 func describeControlPlane(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[1] Control plane", func() {
+	Describe("[1] Control plane", func() {
 		Context("[1.1] API Server", func() {
-			controlplane.APIServer(1, 1, missingProcFunc)
+			controlplane.APIServer(missingProcFunc)
 		})
 		Context("[1.2] Scheduler", func() {
-			controlplane.Scheduler(1, 2, missingProcFunc)
+			controlplane.Scheduler(missingProcFunc)
 		})
 		Context("[1.3] Controller Manager", func() {
-			controlplane.ControllerManager(1, 3, missingProcFunc)
+			controlplane.ControllerManager(missingProcFunc)
 		})
 		Context("[1.4] Configuration Files", func() {
-			controlplane.ConfigurationFiles(1, 4, missingProcFunc)
+			controlplane.ConfigurationFiles(missingProcFunc)
 		})
 		Context("[1.5] etcd", func() {
-			controlplane.Etcd(1, 5, missingProcFunc)
+			controlplane.Etcd(missingProcFunc)
 		})
 		Context("[1.6] General Security Primitives", func() {
-			controlplane.GeneralSecurityPrimitives(1, 6, missingProcFunc)
+			controlplane.GeneralSecurityPrimitives(missingProcFunc)
 		})
 	})
 }

@@ -15,8 +15,6 @@
 package controlplane
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
@@ -25,11 +23,11 @@ import (
 
 const schedulerProcessName = "kube-scheduler"
 
-func Scheduler(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+func Scheduler(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	f := framework.New(schedulerProcessName, missingProcessFunc)
 	BeforeEach(f.BeforeEach)
 
-	It(fmt.Sprintf("[%d.%d.1] Ensure that the --profiling argument is set to false", index, subIndex), func() {
+	It("[1.2.1] Ensure that the --profiling argument is set to false [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
 	})
 }

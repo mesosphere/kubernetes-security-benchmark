@@ -15,8 +15,6 @@
 package federated
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
@@ -29,7 +27,7 @@ func ControllerManager(index, subIndex int, missingProcessFunc framework.Missing
 	f := framework.New(controllerManagerProcessName, missingProcessFunc)
 	BeforeEach(f.BeforeEach)
 
-	It(fmt.Sprintf("[%d.%d.1] Ensure that the --profiling argument is set to false", index, subIndex), func() {
+	It("[3.2.1] Ensure that the --profiling argument is set to false [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
 	})
 }

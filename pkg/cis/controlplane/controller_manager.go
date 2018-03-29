@@ -15,8 +15,6 @@
 package controlplane
 
 import (
-	"fmt"
-
 	. "github.com/onsi/ginkgo"
 
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/framework"
@@ -25,31 +23,31 @@ import (
 
 const controllerManagerProcessName = "kube-controller-manager"
 
-func ControllerManager(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+func ControllerManager(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	f := framework.New(controllerManagerProcessName, missingProcessFunc)
 	BeforeEach(f.BeforeEach)
 
-	PIt(fmt.Sprintf("[%d.%d.1] Ensure that the --terminated-pod-gc-threshold argument is set as appropriate", index, subIndex))
+	PIt("[1.3.1] Ensure that the --terminated-pod-gc-threshold argument is set as appropriate [Scored]")
 
-	It(fmt.Sprintf("[%d.%d.2] Ensure that the --profiling argument is set to false", index, subIndex), func() {
+	It("[1.3.2] Ensure that the --profiling argument is set to false [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
 	})
 
-	It(fmt.Sprintf("[%d.%d.3] Ensure that the --use-service-account-credentials argument is set to true", index, subIndex), func() {
+	It("[1.3.3] Ensure that the --use-service-account-credentials argument is set to true [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--use-service-account-credentials", "true"))
 	})
 
-	It(fmt.Sprintf("[%d.%d.4] Ensure that the --service-account-private-key-file argument is set as appropriate", index, subIndex), func() {
+	It("[1.3.4] Ensure that the --service-account-private-key-file argument is set as appropriate [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--service-account-private-key-file"))
 	})
 
-	It(fmt.Sprintf("[%d.%d.5] Ensure that the --root-ca-file argument is set as appropriate", index, subIndex), func() {
+	It("[1.3.5] Ensure that the --root-ca-file argument is set as appropriate [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--root-ca-file"))
 	})
 
-	PIt(fmt.Sprintf("[%d.%d.6] Apply Security Context to Your Pods and Containers", index, subIndex))
+	PIt("[1.3.6] Apply Security Context to Your Pods and Containers [Not Scored]")
 
-	It(fmt.Sprintf("[%d.%d.7] Ensure that the RotateKubeletServerCertificate argument is set to true", index, subIndex), func() {
+	It("[1.3.7] Ensure that the RotateKubeletServerCertificate argument is set to true [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagThatContainsValue("--feature-gates", "RotateKubeletServerCertificate=true"))
 	})
 }

@@ -22,7 +22,7 @@ import (
 )
 
 func describeNode(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[2] Node", func() {
+	Describe("[2] Node", func() {
 		Context("[2.1] Kubelet", func() {
 			node.Kubelet(2, 1, missingProcFunc)
 		})

@@ -1,4 +1,4 @@
-// Copyright © 2018 Jimmi Dyson <jimmidyson@gmail.com>
+// Copyright © 2.28 Jimmi Dyson <jimmidyson@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,19 +44,13 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				kubeconfigFilePath = kubeConfigFile
 			})
 
-			It(
-				fmt.Sprintf("[%d.%d.1] Ensure that the kubelet.conf file permissions are set to 644 or more restrictive", index, subIndex),
-				func() {
-					Expect(kubeconfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
-				},
-			)
+			It("[2.2.1] Ensure that the kubelet.conf file permissions are set to 644 or more restrictive [Scored]", func() {
+				Expect(kubeconfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
+			})
 
-			It(
-				fmt.Sprintf("[%d.%d.2] Ensure that the kubelet.conf file ownership is set to root:root", index, subIndex),
-				func() {
-					Expect(kubeconfigFilePath).To(BeOwnedBy("root", "root"))
-				},
-			)
+			It("[2.2.2] Ensure that the kubelet.conf file ownership is set to root:root [Scored]", func() {
+				Expect(kubeconfigFilePath).To(BeOwnedBy("root", "root"))
+			})
 		})
 
 		Context("", func() {
@@ -70,7 +64,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				Expect(err).NotTo(HaveOccurred())
 			})
 
-			It(fmt.Sprintf("[%d.%d.3] Ensure that the kubelet service file permissions are set to 644 or more restrictive", index, subIndex), func() {
+			It("[2.2.3] Ensure that the kubelet service file permissions are set to 644 or more restrictive [Scored]", func() {
 				err := filepath.Walk(kubeletServiceFileDir, func(path string, info os.FileInfo, err error) error {
 					ExpectWithOffset(1, err).NotTo(HaveOccurred())
 					if !info.IsDir() {
@@ -81,7 +75,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				Expect(err).NotTo(HaveOccurred())
 			})
 
-			It(fmt.Sprintf("[%d.%d.4] Ensure that the kubelet service file ownership is set to root:root", index, subIndex), func() {
+			It("[2.2.4] Ensure that the kubelet service file ownership is set to root:root [Scored]", func() {
 				err := filepath.Walk(kubeletServiceFileDir, func(path string, info os.FileInfo, err error) error {
 					ExpectWithOffset(1, err).NotTo(HaveOccurred())
 					if !info.IsDir() {
@@ -110,19 +104,13 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				kubeconfigFilePath = kubeConfigFile
 			})
 
-			It(
-				fmt.Sprintf("[%d.%d.5] Ensure that the proxy kubeconfig file permissions are set to 644 or more restrictive", index, subIndex),
-				func() {
-					Expect(kubeconfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
-				},
-			)
+			It("[2.2.5] Ensure that the proxy kubeconfig file permissions are set to 644 or more restrictive [Scored]", func() {
+				Expect(kubeconfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
+			})
 
-			It(
-				fmt.Sprintf("[%d.%d.6] Ensure that the proxy kubeconfig file ownership is set to root:root", index, subIndex),
-				func() {
-					Expect(kubeconfigFilePath).To(BeOwnedBy("root", "root"))
-				},
-			)
+			It("[2.2.6] Ensure that the proxy kubeconfig file ownership is set to root:root [Scored]", func() {
+				Expect(kubeconfigFilePath).To(BeOwnedBy("root", "root"))
+			})
 		})
 	})
 
@@ -142,19 +130,13 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				clientCAFilePath = clientCAFile
 			})
 
-			It(
-				fmt.Sprintf("[%d.%d.7] Ensure that the certificate authorities file permissions are set to 644 or more restrictive", index, subIndex),
-				func() {
-					Expect(clientCAFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
-				},
-			)
+			It("[2.2.7] Ensure that the certificate authorities file permissions are set to 644 or more restrictive [Scored]", func() {
+				Expect(clientCAFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
+			})
 
-			It(
-				fmt.Sprintf("[%d.%d.8] Ensure that the client certificate authorities file ownership is set to root:root", index, subIndex),
-				func() {
-					Expect(clientCAFilePath).To(BeOwnedBy("root", "root"))
-				},
-			)
+			It("[2.2.8] Ensure that the client certificate authorities file ownership is set to root:root [Scored]", func() {
+				Expect(clientCAFilePath).To(BeOwnedBy("root", "root"))
+			})
 		})
 	})
 }

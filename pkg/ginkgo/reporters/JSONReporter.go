@@ -57,13 +57,13 @@ type JSONTestSuite struct {
 type SpecResult string
 
 const (
-	SpecResultPassed   SpecResult = "passed"
 	SpecResultFailed   SpecResult = "failed"
+	SpecResultPassed   SpecResult = "passed"
 	SpecResultSkipped  SpecResult = "skipped"
 	SpecResultPending  SpecResult = "pending"
 	SpecResultTimeout  SpecResult = "timeout"
 	SpecResultPanicked SpecResult = "panicked"
-	SpecResultInvalid  SpecResult = "invaliud"
+	SpecResultInvalid  SpecResult = "invalid"
 )
 
 type JSONTestCase struct {

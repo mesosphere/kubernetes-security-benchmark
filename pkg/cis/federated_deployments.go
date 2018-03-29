@@ -22,7 +22,7 @@ import (
 )
 
 func describeFederatedDeployment(missingProcFunc framework.MissingProcessHandlerFunc) {
-	CISDescribe("[3] Federated Deployments", func() {
+	Describe("[3] Federated Deployments", func() {
 		Context("[3.1] Federation API Server", func() {
 			federated.APIServer(3, 1, missingProcFunc)
 		})

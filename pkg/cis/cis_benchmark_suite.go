@@ -15,7 +15,6 @@
 package cis
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/onsi/ginkgo"
@@ -28,10 +27,6 @@ import (
 
 const CISVersion = "1.2.0"
 
-func CISDescribe(text string, body func()) bool {
-	return Describe(fmt.Sprintf("[CIS Kubernetes %s] %s", CISVersion, text), body)
-}
-
 func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*testing.T) {
 	describeControlPlane(missingProcFunc)
 	describeNode(missingProcFunc)
@@ -43,7 +38,7 @@ func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*tes
 		jsonReporter := reporters.NewJSONReporter("cis.json")
 		RunSpecsWithDefaultAndCustomReporters(
 			t,
-			"Kubernetes CIS benchmark",
+			"Kubernetes CIS benchmark "+CISVersion,
 			[]Reporter{junitReporter, jsonReporter},
 		)
 	}

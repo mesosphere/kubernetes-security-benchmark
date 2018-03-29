@@ -47,7 +47,7 @@ func configFilePermissionsContext(directory, fileName string, specFunc func(file
 	})
 }
 
-func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	Context("", func() {
 		kubelet := framework.New("kubelet", missingProcessFunc)
 		BeforeEach(kubelet.BeforeEach)
@@ -66,41 +66,41 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 			})
 
 			configFilePermissionsContext(kubeletPodManifestPath, "api-server.yaml", func(filePath string) {
-				It(fmt.Sprintf("[%d.%d.1] Ensure that the API server pod specification file permissions are set to 644 or more restrictive", index, subIndex), func() {
+				It("[1.4.1] Ensure that the API server pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
 
-				It(fmt.Sprintf("[%d.%d.2] Ensure that the API server pod specification file ownership is set to root:root", index, subIndex), func() {
+				It("[1.4.2] Ensure that the API server pod specification file ownership is set to root:root [Scored]", func() {
 					Expect(filePath).To(BeOwnedBy("root", "root"))
 				})
 			})
 
 			configFilePermissionsContext(kubeletPodManifestPath, "kube-controller-manager.yaml", func(filePath string) {
-				It(fmt.Sprintf("[%d.%d.3] Ensure that the controller manager pod specification file permissions are set to 644 or more restrictive", index, subIndex), func() {
+				It("[1.4.3] Ensure that the controller manager pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
 
-				It(fmt.Sprintf("[%d.%d.4] Ensure that the controller manager pod specification file ownership is set to root:root", index, subIndex), func() {
+				It("[1.4.4] Ensure that the controller manager pod specification file ownership is set to root:root [Scored]", func() {
 					Expect(filePath).To(BeOwnedBy("root", "root"))
 				})
 			})
 
 			configFilePermissionsContext(kubeletPodManifestPath, "kube-scheduler.yaml", func(filePath string) {
-				It(fmt.Sprintf("[%d.%d.5] Ensure that the scheduler pod specification file permissions are set to 644 or more restrictive", index, subIndex), func() {
+				It("[1.4.5] Ensure that the scheduler pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
 
-				It(fmt.Sprintf("[%d.%d.6] Ensure that the scheduler pod specification file ownership is set to root:root", index, subIndex), func() {
+				It("[1.4.6] Ensure that the scheduler pod specification file ownership is set to root:root [Scored]", func() {
 					Expect(filePath).To(BeOwnedBy("root", "root"))
 				})
 			})
 
 			configFilePermissionsContext(kubeletPodManifestPath, "etcd.yaml", func(filePath string) {
-				It(fmt.Sprintf("[%d.%d.7] Ensure that the etcd pod specification file permissions are set to 644 or more restrictive", index, subIndex), func() {
+				It("[1.4.7] Ensure that the etcd pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
 
-				It(fmt.Sprintf("[%d.%d.8] Ensure that the etcd pod specification file ownership is set to root:root", index, subIndex), func() {
+				It("[1.4.8] Ensure that the etcd pod specification file ownership is set to root:root [Scored]", func() {
 					Expect(filePath).To(BeOwnedBy("root", "root"))
 				})
 			})
@@ -129,7 +129,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				cniConfDir = ccd.(string)
 			})
 
-			It(fmt.Sprintf("[%d.%d.9] Ensure that the Container Network Interface file permissions are set to 644 or more restrictive", index, subIndex), func() {
+			It("[1.4.9] Ensure that the Container Network Interface file permissions are set to 644 or more restrictive [Scored]", func() {
 				err := filepath.Walk(cniConfDir, func(path string, info os.FileInfo, err error) error {
 					ExpectWithOffset(1, err).NotTo(HaveOccurred())
 					if !info.IsDir() {
@@ -140,7 +140,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				Expect(err).NotTo(HaveOccurred())
 			})
 
-			It(fmt.Sprintf("[%d.%d.10] Ensure that the Container Network Interface file ownership is set to root:root", index, subIndex), func() {
+			It("[1.4.10] Ensure that the Container Network Interface file ownership is set to root:root [Scored]", func() {
 				err := filepath.Walk(cniConfDir, func(path string, info os.FileInfo, err error) error {
 					ExpectWithOffset(1, err).NotTo(HaveOccurred())
 					if !info.IsDir() {
@@ -171,11 +171,11 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 				etcdDataDir = edd.(string)
 			})
 
-			It(fmt.Sprintf("[%d.%d.11] Ensure that the etcd data directory permissions are set to 700 or more restrictive", index, subIndex), func() {
+			It("[1.4.11] Ensure that the etcd data directory permissions are set to 700 or more restrictive [Scored]", func() {
 				Expect(etcdDataDir).To(HavePermissionsNumerically("<=", os.FileMode(0700)))
 			})
 
-			It(fmt.Sprintf("[%d.%d.12] Ensure that the etcd data directory ownership is set to etcd:etcd", index, subIndex), func() {
+			It("[1.4.12] Ensure that the etcd data directory ownership is set to etcd:etcd [Scored]", func() {
 				Expect(etcdDataDir).To(BeOwnedBy("etcd", "etcd"))
 			})
 		})
@@ -193,11 +193,11 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 			}
 		})
 
-		It(fmt.Sprintf("[%d.%d.13] Ensure that the admin.conf file permissions are set to 644 or more restrictive", index, subIndex), func() {
+		It("[1.4.13] Ensure that the admin.conf file permissions are set to 644 or more restrictive [Scored]", func() {
 			Expect(adminFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 		})
 
-		It(fmt.Sprintf("[%d.%d.14] Ensure that the admin.conf file ownership is set to root:root", index, subIndex), func() {
+		It("[1.4.14] Ensure that the admin.conf file ownership is set to root:root [Scored]", func() {
 			Expect(adminFilePath).To(BeOwnedBy("root", "root"))
 		})
 	})
@@ -235,24 +235,24 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 
 		kubeconfigFlagContext("kube-scheduler", func() {
 			It(
-				fmt.Sprintf("[%d.%d.15] Ensure that the scheduler.conf file permissions are set to 644 or more restrictive", index, subIndex),
+				"[1.4.15] Ensure that the scheduler.conf file permissions are set to 644 or more restrictive [Scored]",
 				assertKubeconfigFilePermissions(),
 			)
 
 			It(
-				fmt.Sprintf("[%d.%d.16] Ensure that the scheduler.conf file ownership is set to root:root", index, subIndex),
+				"[1.4.16] Ensure that the scheduler.conf file ownership is set to root:root [Scored]",
 				assertKubeconfigFileOwnership(),
 			)
 		})
 
 		kubeconfigFlagContext("kube-controller-manager", func() {
 			It(
-				fmt.Sprintf("[%d.%d.17] Ensure that the controller-manager.conf file permissions are set to 644 or more restrictive", index, subIndex),
+				"[1.4.17] Ensure that the controller-manager.conf file permissions are set to 644 or more restrictive [Scored]",
 				assertKubeconfigFilePermissions(),
 			)
 
 			It(
-				fmt.Sprintf("[%d.%d.18] Ensure that the controller-manager.conf file ownership is set to root:root", index, subIndex),
+				"[1.4.18] Ensure that the controller-manager.conf file ownership is set to root:root [Scored]",
 				assertKubeconfigFileOwnership(),
 			)
 		})
