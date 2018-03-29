@@ -10,7 +10,7 @@
   map(reduce .[] as $item ({}; . * $item))
 }] |
   unique |
-  [
+  { specs: [
     .[].specs[] |
       . + {
         result: ([.results[].result] as $results |
@@ -27,5 +27,16 @@
           ) | $results[index(min)]
         )
       }
-  ] |
-  sort_by(.name|scan("\\[\\d+\\.\\d+\\.\\d+\\]")|scan("\\d+\\.\\d+\\.\\d+")|split(".")|map(tonumber))
+    ] |
+    sort_by(.name|scan("\\[\\d+\\.\\d+\\.\\d+\\]")|scan("\\d+\\.\\d+\\.\\d+")|split(".")|map(tonumber))
+  } |
+  . + {
+    total:    [.specs[]] | length,
+    passed:   [.specs[]] | map(select(.result == "passed"))   | length,
+    failures: [.specs[]] | map(select(.result == "failed"))   | length,
+    skipped:  [.specs[]] | map(select(.result == "skipped"))  | length,
+    pending:  [.specs[]] | map(select(.result == "pending"))  | length,
+    invalid:  [.specs[]] | map(select(.result == "invalid"))  | length,
+    timeout:  [.specs[]] | map(select(.result == "timeout"))  | length,
+    panicked: [.specs[]] | map(select(.result == "panicked")) | length,
+  }
