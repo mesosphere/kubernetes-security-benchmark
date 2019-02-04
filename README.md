@@ -104,18 +104,19 @@ $ kubernetes-security-benchmark cis --spec.focus='\[1\.1\]'
 #### Subcommands
 
 Here is a full list of the subcommands available:
-
-* `kubernetes-security-benchmark cis`
-  * `kubernetes-security-benchmark cis control-plane`
-    * `kubernetes-security-benchmark cis control-plane api-server`
-    * `kubernetes-security-benchmark cis control-plane configuration-files`
-    * `kubernetes-security-benchmark cis control-plane controller-manager`
-    * `kubernetes-security-benchmark cis control-plane etcd`
-    * `kubernetes-security-benchmark cis control-plane general-security-primitives`
-    * `kubernetes-security-benchmark cis control-plane scheduler`
-  * `kubernetes-security-benchmark cis federation`
-    * `kubernetes-security-benchmark cis federation api-server`
-    * `kubernetes-security-benchmark cis federation controller-manager`
-  * `kubernetes-security-benchmark cis node`
-    * `kubernetes-security-benchmark cis node configuration-files`
-    * `kubernetes-security-benchmark cis node kubelet`
+```shell
+* kubernetes-security-benchmark cis
+  * kubernetes-security-benchmark cis control-plane
+    * kubernetes-security-benchmark cis control-plane api-server
+    * kubernetes-security-benchmark cis control-plane configuration-files
+    * kubernetes-security-benchmark cis control-plane controller-manager
+    * kubernetes-security-benchmark cis control-plane etcd
+    * kubernetes-security-benchmark cis control-plane general-security-primitives
+    * kubernetes-security-benchmark cis control-plane scheduler
+  * kubernetes-security-benchmark cis federation
+    * kubernetes-security-benchmark cis federation api-server
+    * kubernetes-security-benchmark cis federation controller-manager
+  * kubernetes-security-benchmark cis node
+    * kubernetes-security-benchmark cis node configuration-files
+    * kubernetes-security-benchmark cis node kubelet
+```
