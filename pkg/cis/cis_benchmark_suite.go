@@ -25,7 +25,7 @@ import (
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/ginkgo/reporters"
 )
 
-const CISVersion = "1.2.0"
+const CISVersion = "1.4.0"
 
 func CISBenchmark(missingProcFunc framework.MissingProcessHandlerFunc) func(*testing.T) {
 	describeControlPlane(missingProcFunc)
