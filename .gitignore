@@ -7,3 +7,4 @@ junit*.xml
 cis.json
 results/
 out/
+.idea/

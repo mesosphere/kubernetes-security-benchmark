@@ -12,57 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ROOTPKG := $(shell go list .)
+SHELL=/bin/bash -o pipefail
+
+export GO111MODULE := on
+
+ROOTPKG := $(shell go list -m)
 PARENTPKG := $(shell dirname $(ROOTPKG))
 BINARYNAME := $(shell basename $(ROOTPKG))
 
-export GOPATH := $(CURDIR)/.go
-export GOBIN := $(GOPATH)/bin
-export CGO_ENABLED=0
-
 BUILD_DATE := $(shell date -u)
-VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty --always)
+VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty=-dev --always)
 
-DCOS_TASK ?= kube-apiserver-0-instance
+DCOS_TASK ?= kube-control-plane-0-instance
 CIS_FOCUS ?=
 
 .PHONY: build
 build: out/$(BINARYNAME)
 
-out/$(BINARYNAME): .vendor $(shell find ! -path '*/.go/*' -type f -name '*.go')
-	@cd $(GOPATH)/src/$(ROOTPKG) && \
-		GOOS=linux GOARCH=amd64 go build \
-			-tags netgo \
-			-ldflags "-extldflags \"-static\" -X $(ROOTPKG)/pkg/version.AppVersion=$(VERSION) -X '$(ROOTPKG)/pkg/version.BuildDate=$(BUILD_DATE)'" \
-			-o $(CURDIR)/out/$(BINARYNAME) .
-
-.PHONY: vendor
-vendor: .vendor
-
-.vendor: .gopath.prepare $(GOBIN)/dep Gopkg.toml Gopkg.lock
-	@cd $(GOPATH)/src/$(ROOTPKG) && $(GOBIN)/dep ensure
-	@touch $@
-
-.gopath: .vendor
-	@touch $@
-
-.gopath.prepare:
-	@mkdir -p $(GOPATH)/src/$(PARENTPKG)
-	@ln -s $(CURDIR) $(GOPATH)/src/$(ROOTPKG)
-	@touch $@
-
-.PHONY: dep
-dep: $(GOBIN)/dep
-
-$(GOBIN)/dep:
-	@go get github.com/golang/dep/cmd/dep
+out/$(BINARYNAME): $(shell find ! -path './out/*' ! -path './results/*' -type f)
+	@GOOS=linux GOARCH=amd64 go build \
+		-tags netgo \
+		-ldflags "-extldflags \"-static\" -X $(ROOTPKG)/pkg/version.AppVersion=$(VERSION) -X '$(ROOTPKG)/pkg/version.BuildDate=$(BUILD_DATE)'" \
+		-o $(CURDIR)/out/$(BINARYNAME) .
 
 .PHONY: clean
 clean:
-	@rm -rf vendor .vendor $(GOPATH) .gopath .gopath.prepare results out
+	@rm -rf results out
 
 .PHONY: test.dcos
-test.dcos: build $(addprefix test.dcos.,apiserver scheduler controller-manager etcd kubelet kube-proxy) test.dcos.aggregate
+test.dcos: build $(addprefix test.dcos.,control-plane etcd kubelet) test.dcos.aggregate
 
 .PHONY: test.dcos.aggregate
 test.dcos.aggregate:
@@ -95,17 +73,9 @@ endif
 	@echo "Retrieving json results from $(DCOS_TASK) into $(CURDIR)/results/$(DCOS_TASK)/cis.json"
 	@dcos task exec -i $(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/$(DCOS_TASK)/cis.json
 
-.PHONY: test.dcos.apiserver
-test.dcos.apiserver: build
-	@$(MAKE) DCOS_TASK=kube-apiserver-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
-
-.PHONY: test.dcos.scheduler
-test.dcos.scheduler: build
-	@$(MAKE) DCOS_TASK=kube-scheduler-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
-
-.PHONY: test.dcos.controller-manager
-test.dcos.controller-manager: build
-	@$(MAKE) DCOS_TASK=kube-controller-manager-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+.PHONY: test.dcos.control-plane
+test.dcos.control-plane: build
+	@$(MAKE) DCOS_TASK=kube-control-plane-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.etcd
 test.dcos.etcd: build
@@ -114,7 +84,3 @@ test.dcos.etcd: build
 .PHONY: test.dcos.kubelet
 test.dcos.kubelet: build
 	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
-
-.PHONY: test.dcos.kube-proxy
-test.dcos.kube-proxy: build
-	@$(MAKE) DCOS_TASK=kube-node-0-kube-proxy CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
