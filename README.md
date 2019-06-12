@@ -113,6 +113,7 @@ Here is a full list of the subcommands available:
     * `kubernetes-security-benchmark cis control-plane etcd`
     * `kubernetes-security-benchmark cis control-plane general-security-primitives`
     * `kubernetes-security-benchmark cis control-plane scheduler`
+    * `kubernetes-security-benchmark cis control-plane podsecuritypolicies`
   * `kubernetes-security-benchmark cis node`
     * `kubernetes-security-benchmark cis node configuration-files`
     * `kubernetes-security-benchmark cis node kubelet`
