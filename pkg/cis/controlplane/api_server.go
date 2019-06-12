@@ -60,7 +60,7 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	})
 
 	It("[1.1.9] Ensure that the --repair-malformed-updates argument is set to false [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagWithValue("--repair-malformed-updates", "false"))
+		Skip("Flag no longer exists in Kubernetes 1.14")
 	})
 
 	It("[1.1.10] Ensure that the admission control plugin AlwaysAdmit is not set [Scored]", func() {
@@ -147,7 +147,7 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	})
 
 	It("[1.1.30] Ensure that the API Server only makes use of Strong Cryptographic Ciphers [Not Scored]", func() {
-		ExpectProcess(f).To(HaveFlagWithValue("--tls-ciphersuites", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"))
+		ExpectProcess(f).To(HaveFlagWithValue("--tls-cipher-suites", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"))
 	})
 
 	It("[1.1.31] Ensure that the --etcd-cafile argument is set as appropriate [Scored]", func() {
