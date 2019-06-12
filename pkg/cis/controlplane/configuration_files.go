@@ -29,10 +29,9 @@ import (
 
 func configFilePermissionsContext(directory, fileName string, specFunc func(filePath string)) {
 	Context("", func() {
-		var filePath string
+		filePath := filepath.Join(directory, fileName)
 
 		BeforeEach(func() {
-			filePath = filepath.Join(directory, fileName)
 			_, err := os.Stat(filePath)
 			if err != nil {
 				if os.IsNotExist(err) {
@@ -48,6 +47,8 @@ func configFilePermissionsContext(directory, fileName string, specFunc func(file
 }
 
 func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) {
+	cwd, _ := os.Getwd()
+
 	Context("", func() {
 		kubelet := framework.New("kubelet", missingProcessFunc)
 		BeforeEach(kubelet.BeforeEach)
@@ -65,7 +66,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				kubeletPodManifestPath = kmp.(string)
 			})
 
-			configFilePermissionsContext(kubeletPodManifestPath, "api-server.yaml", func(filePath string) {
+			configFilePermissionsContext(kubeletPodManifestPath, "kube-apiserver.yml", func(filePath string) {
 				It("[1.4.1] Ensure that the API server pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
@@ -75,7 +76,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				})
 			})
 
-			configFilePermissionsContext(kubeletPodManifestPath, "kube-controller-manager.yaml", func(filePath string) {
+			configFilePermissionsContext(kubeletPodManifestPath, "kube-controller-manager.yml", func(filePath string) {
 				It("[1.4.3] Ensure that the controller manager pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
@@ -85,7 +86,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				})
 			})
 
-			configFilePermissionsContext(kubeletPodManifestPath, "kube-scheduler.yaml", func(filePath string) {
+			configFilePermissionsContext(kubeletPodManifestPath, "kube-scheduler.yml", func(filePath string) {
 				It("[1.4.5] Ensure that the scheduler pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
@@ -95,7 +96,9 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				})
 			})
 
-			configFilePermissionsContext(kubeletPodManifestPath, "etcd.yaml", func(filePath string) {
+			configFilePermissionsContext(kubeletPodManifestPath, ""+
+				""+
+				".yaml", func(filePath string) {
 				It("[1.4.7] Ensure that the etcd pod specification file permissions are set to 644 or more restrictive [Scored]", func() {
 					Expect(filePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 				})
@@ -122,7 +125,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				ccd, err := util.FlagValueFromProcess(kubelet.Process, "cni-conf-dir")
 				Expect(err).NotTo(HaveOccurred())
 				if ccd == "" {
-					Skip("Flag --cni-conf-dir is unset")
+					ccd = "/etc/cni/net.d/"
 				}
 				Expect(ccd).To(BeADirectory())
 
@@ -164,7 +167,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				edd, err := util.FlagValueFromProcess(etcd.Process, "data-dir")
 				Expect(err).NotTo(HaveOccurred())
 				if edd == "" {
-					Skip("Flag --data-dir is unset")
+					edd = filepath.Join(cwd, "data-dir")
 				}
 				Expect(edd).To(BeADirectory())
 
@@ -220,7 +223,7 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 
 				Context("", func() {
 					BeforeEach(func() {
-						kubeConfigFile, fileExists, err := util.FilePathFromFlag(f.Process, "kubeconfig")
+						kubeConfigFile, fileExists, err := util.FilePathFromFlag(f.Process, "kubeconfig", cwd)
 						Expect(err).NotTo(HaveOccurred())
 						if !fileExists {
 							Skip(fmt.Sprintf("%s does not exist", kubeConfigFile))
@@ -256,5 +259,13 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 				assertKubeconfigFileOwnership(),
 			)
 		})
+	})
+
+	Context("", func() {
+		PIt("[1.4.19] Ensure that the Kubernetes PKI directory and file ownership is set to root:root [Scored]")
+
+		PIt("[1.4.20] Ensure that the Kubernetes PKI certificate file permissions are set to 644 or more restrictive [Scored]")
+
+		PIt("[1.4.21] Ensure that the Kubernetes PKI key file permissions are set to 600 [Scored]")
 	})
 }

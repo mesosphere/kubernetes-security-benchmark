@@ -30,4 +30,9 @@ func Scheduler(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	It("[1.2.1] Ensure that the --profiling argument is set to false [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--profiling", "false"))
 	})
+
+	It("[1.2.2] Ensure that the --address argument is set to 127.0.0.1 [Scored]", func() {
+		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--address", "127.0.0.1"))
+		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--bind-address", "127.0.0.1"))
+	})
 }

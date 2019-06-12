@@ -53,13 +53,5 @@ func Etcd(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--peer-auto-tls", "false"))
 	})
 
-	It("[1.5.7] Ensure that the --wal-dir argument is set as appropriate [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagWithAnyValue("--wal-dir"))
-	})
-
-	It("[1.5.8] Ensure that the --max-wals argument is set to 0 [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagWithValue("--max-wals", "0"))
-	})
-
-	PIt("[1.5.9] Ensure that a unique Certificate Authority is used for etcd [Not Scored]")
+	PIt("[1.5.7] Ensure that a unique Certificate Authority is used for etcd [Not Scored]")
 }

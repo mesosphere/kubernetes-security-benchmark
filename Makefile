@@ -16,7 +16,7 @@ SHELL=/bin/bash -o pipefail
 
 export GO111MODULE := on
 
-ROOTPKG := $(shell go list -m)
+ROOTPKG := $(shell GO111MODULE=$(GO111MODULE) go list -m)
 PARENTPKG := $(shell dirname $(ROOTPKG))
 BINARYNAME := $(shell basename $(ROOTPKG))
 

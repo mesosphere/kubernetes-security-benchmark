@@ -27,7 +27,7 @@ import (
 	"github.com/mesosphere/kubernetes-security-benchmark/pkg/util"
 )
 
-func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.MissingProcessHandlerFunc) {
+func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	Context("", func() {
 		kubelet := framework.New("kubelet", missingProcessFunc)
 		BeforeEach(kubelet.BeforeEach)
@@ -36,7 +36,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 			var kubeconfigFilePath string
 
 			BeforeEach(func() {
-				kubeConfigFile, fileExists, err := util.FilePathFromFlag(kubelet.Process, "kubeconfig")
+				kubeConfigFile, fileExists, err := util.FilePathFromFlag(kubelet.Process, "kubeconfig", "")
 				Expect(err).NotTo(HaveOccurred())
 				if !fileExists {
 					Skip(fmt.Sprintf("%s does not exist", kubeConfigFile))
@@ -94,9 +94,10 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 
 		Context("", func() {
 			var kubeconfigFilePath string
+			cwd, _ := os.Getwd()
 
 			BeforeEach(func() {
-				kubeConfigFile, fileExists, err := util.FilePathFromFlag(kubeProxy.Process, "kubeconfig")
+				kubeConfigFile, fileExists, err := util.FilePathFromFlag(kubeProxy.Process, "kubeconfig", cwd)
 				Expect(err).NotTo(HaveOccurred())
 				if !fileExists {
 					Skip(fmt.Sprintf("%s does not exist", kubeConfigFile))
@@ -122,7 +123,7 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 			var clientCAFilePath string
 
 			BeforeEach(func() {
-				clientCAFile, fileExists, err := util.FilePathFromFlag(kubelet.Process, "client-ca-file")
+				clientCAFile, fileExists, err := util.FilePathFromFlag(kubelet.Process, "client-ca-file", "")
 				Expect(err).NotTo(HaveOccurred())
 				if !fileExists {
 					Skip(fmt.Sprintf("%s does not exist", clientCAFile))
@@ -136,6 +137,30 @@ func ConfigurationFiles(index, subIndex int, missingProcessFunc framework.Missin
 
 			It("[2.2.8] Ensure that the client certificate authorities file ownership is set to root:root [Scored]", func() {
 				Expect(clientCAFilePath).To(BeOwnedBy("root", "root"))
+			})
+		})
+
+		Context("", func() {
+			var kubeletConfigFilePath string
+
+			BeforeEach(func() {
+				kubeletConfigFile, fileExists, err := util.FilePathFromFlag(kubelet.Process, "config", "")
+				Expect(err).NotTo(HaveOccurred())
+				if kubeletConfigFile == "" {
+					Skip(fmt.Sprintf("--config is not set"))
+				}
+				if !fileExists {
+					Skip(fmt.Sprintf("%s does not exist", kubeletConfigFile))
+				}
+				kubeletConfigFilePath = kubeletConfigFile
+			})
+
+			It("[2.2.9] Ensure that the kubelet configuration file ownership is set to root:root [Scored]", func() {
+				Expect(kubeletConfigFilePath).To(BeOwnedBy("root", "root"))
+			})
+
+			It("[2.2.10] Ensure that the kubelet configuration file has permissions set to 644 or more restrictive [Scored]", func() {
+				Expect(kubeletConfigFilePath).To(HavePermissionsNumerically("<=", os.FileMode(0644)))
 			})
 		})
 	})

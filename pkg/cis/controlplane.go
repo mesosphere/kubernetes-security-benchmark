@@ -41,5 +41,8 @@ func describeControlPlane(missingProcFunc framework.MissingProcessHandlerFunc) {
 		Context("[1.6] General Security Primitives", func() {
 			controlplane.GeneralSecurityPrimitives(missingProcFunc)
 		})
+		Context("[1.7] PodSecurityPolicies", func() {
+			controlplane.PodSecurityPolicies(missingProcFunc)
+		})
 	})
 }

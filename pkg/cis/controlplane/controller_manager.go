@@ -45,9 +45,12 @@ func ControllerManager(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--root-ca-file"))
 	})
 
-	PIt("[1.3.6] Apply Security Context to Your Pods and Containers [Not Scored]")
-
-	It("[1.3.7] Ensure that the RotateKubeletServerCertificate argument is set to true [Scored]", func() {
+	It("[1.3.6] Ensure that the RotateKubeletServerCertificate argument is set to true [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagThatContainsValue("--feature-gates", "RotateKubeletServerCertificate=true"))
+	})
+
+	It("[1.3.7] Ensure that the --address argument is set to 127.0.0.1 [Scored]", func() {
+		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--address", "127.0.0.1"))
+		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--bind-address", "127.0.0.1"))
 	})
 }

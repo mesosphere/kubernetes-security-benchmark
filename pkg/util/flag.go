@@ -39,12 +39,15 @@ func FlagValueFromProcess(p *process.Process, flagName string) (interface{}, err
 	return "", nil
 }
 
-func FilePathFromFlag(p *process.Process, flagName string) (path string, exists bool, err error) {
+func FilePathFromFlag(p *process.Process, flagName, optionalAlternativeRoot string) (path string, exists bool, err error) {
 	v, err := FlagValueFromProcess(p, flagName)
 	if err != nil {
 		return "", false, err
 	}
 	fp := v.(string)
+	if fp == "" {
+		return fp, false, nil
+	}
 	if !filepath.IsAbs(fp) {
 		processCwd, err := p.Cwd()
 		if err != nil {
@@ -56,6 +59,14 @@ func FilePathFromFlag(p *process.Process, flagName string) (path string, exists 
 	_, err = os.Stat(fp)
 	if err != nil {
 		if os.IsNotExist(err) {
+			if optionalAlternativeRoot != "" {
+				alternativeFP := filepath.Join(optionalAlternativeRoot, filepath.Base(fp))
+				_, alternativeFPErr := os.Stat(alternativeFP)
+				if alternativeFPErr != nil {
+					return fp, false, nil
+				}
+				return alternativeFP, true, nil
+			}
 			return fp, false, nil
 		}
 		return fp, false, err

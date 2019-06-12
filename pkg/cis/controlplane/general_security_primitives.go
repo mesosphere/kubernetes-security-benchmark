@@ -23,19 +23,17 @@ import (
 func GeneralSecurityPrimitives(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	PIt("[1.6.1] Ensure that the cluster-admin role is only used where required [Not Scored]")
 
-	PIt("[1.6.2] Create Pod Security Policies for your cluster [Not Scored]")
+	PIt("[1.6.2] Create administrative boundaries between resources using namespaces [Not Scored]")
 
-	PIt("[1.6.3] Create administrative boundaries between resources using namespaces [Not Scored]")
+	PIt("[1.6.3] Create network segmentation using Network Policies [Not Scored]")
 
-	PIt("[1.6.4] Create network segmentation using Network Policies [Not Scored]")
+	PIt("[1.6.4] Ensure that the seccomp profile is set to docker/default in your pod definitions [Not Scored]")
 
-	PIt("[1.6.5] Ensure that the seccomp profile is set to docker/default in your pod definitions [Not Scored]")
+	PIt("[1.6.5] Apply Security Context to Your Pods and Containers [Not Scored]")
 
-	PIt("[1.6.6] Apply Security Context to Your Pods and Containers [Not Scored]")
+	PIt("[1.6.6] Configure Image Provenance using ImagePolicyWebhook admission controller [Not Scored]")
 
-	PIt("[1.6.7] Configure Image Provenance using ImagePolicyWebhook admission controller [Not Scored]")
+	PIt("[1.6.7] Configure Network policies as appropriate [Not Scored]")
 
-	PIt("[1.6.8] Configure Network policies as appropriate [Not Scored]")
-
-	PIt("[1.6.9] Place compensating controls in the form of PSP and RBAC for privileged containers usage [Not Scored]")
+	PIt("[1.6.8] Place compensating controls in the form of PSP and RBAC for privileged containers usage [Not Scored]")
 }

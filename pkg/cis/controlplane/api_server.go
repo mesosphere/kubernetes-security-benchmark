@@ -63,24 +63,24 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithValue("--repair-malformed-updates", "false"))
 	})
 
-	It("[1.1.10] Ensure that the admission control policy is not set to AlwaysAdmit [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatDoesNotContainValue("--admission-control", "AlwaysAdmit"))
+	It("[1.1.10] Ensure that the admission control plugin AlwaysAdmit is not set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatDoesNotContainValue("--enable-admission-plugins", "AlwaysAdmit"))
 	})
 
-	It("[1.1.11] Ensure that the admission control policy is set to AlwaysPullImages [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "AlwaysPullImages"))
+	It("[1.1.11] Ensure that the admission control plugin AlwaysPullImages is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "AlwaysPullImages"))
 	})
 
-	It("[1.1.12] Ensure that the admission control policy is set to DenyEscalatingExec [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "DenyEscalatingExec"))
+	It("[1.1.12] Ensure that the admission control plugin DenyEscalatingExec is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "DenyEscalatingExec"))
 	})
 
-	It("[1.1.13] Ensure that the admission control policy is set to SecurityContextDeny [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "SecurityContextDeny"))
+	It("[1.1.13] Ensure that the admission control plugin SecurityContextDeny is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "SecurityContextDeny"))
 	})
 
-	It("[1.1.14] Ensure that the admission control policy is set to NamespaceLifecycle [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "NamespaceLifecycle"))
+	It("[1.1.14] Ensure that the admission control plugin NamespaceLifecycle is set [Scored]", func() {
+		ExpectProcess(f).To(NotHaveFlagOrNotContainValue("--disable-admission-plugins", "NamespaceLifecycle"))
 	})
 
 	It("[1.1.15] Ensure that the --audit-log-path argument is set as appropriate [Scored]", func() {
@@ -111,7 +111,7 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--kubelet-certificate-authority"))
 	})
 
-	It("[1.1.22] Ensure that the --kubelet-client-certificate and --kubelet-client-key arguments are set as appropriate [Scored]", func() {
+	It("[1.1.22] Ensure that the --kubelet-client-certificate and --kubelet-clientkey arguments are set as appropriate [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--kubelet-client-certificate"))
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--kubelet-client-key"))
 	})
@@ -120,8 +120,8 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithValue("--service-account-lookup", "true"))
 	})
 
-	It("[1.1.24] Ensure that the admission control policy is set to PodSecurityPolicy [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "PodSecurityPolicy"))
+	It("[1.1.24] Ensure that the admission control plugin PodSecurityPolicy is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "PodSecurityPolicy"))
 	})
 
 	It("[1.1.25] Ensure that the --service-account-key-file argument is set as appropriate [Scored]", func() {
@@ -133,8 +133,8 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--etcd-keyfile"))
 	})
 
-	It("[1.1.27] Ensure that the admission control policy is set to ServiceAccount [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "ServiceAccount"))
+	It("[1.1.27] Ensure that the admission control plugin ServiceAccount is set [Scored]", func() {
+		ExpectProcess(f).To(NotHaveFlagOrNotContainValue("--disable-admission-plugins", "ServiceAccount"))
 	})
 
 	It("[1.1.28] Ensure that the --tls-cert-file and --tls-private-key-file arguments are set as appropriate [Scored]", func() {
@@ -146,28 +146,40 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--client-ca-file"))
 	})
 
-	It("[1.1.30] Ensure that the --etcd-cafile argument is set as appropriate [Scored]", func() {
+	It("[1.1.30] Ensure that the API Server only makes use of Strong Cryptographic Ciphers [Not Scored]", func() {
+		ExpectProcess(f).To(HaveFlagWithValue("--tls-ciphersuites", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"))
+	})
+
+	It("[1.1.31] Ensure that the --etcd-cafile argument is set as appropriate [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--etcd-cafile"))
 	})
 
-	It("[1.1.31] Ensure that the --authorization-mode argument is set to Node [Scored]", func() {
+	It("[1.1.32] Ensure that the --authorization-mode argument includes Node [Scored]", func() {
 		ExpectProcess(f).To(HaveFlagThatContainsValue("--authorization-mode", "Node"))
 	})
 
-	It("[1.1.32] Ensure that the admission control policy is set to NodeRestriction [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "NodeRestriction"))
+	It("[1.1.33] Ensure that the admission control plugin NodeRestriction is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "NodeRestriction"))
 	})
 
-	PIt("[1.1.34] Ensure that the encryption provider is set to aescbc [Scored]")
+	It("[1.1.34] Ensure that the --experimental-encryption-provider-config argument is set as appropriate [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagWithAnyValue("--experimental-encryption-provider-config"))
+	})
 
-	It("[1.1.35] Ensure that the admission control policy is set to EventRateLimit [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--admission-control", "EventRateLimit"))
+	PIt("[1.1.35] Ensure that the encryption provider is set to aescbc [Scored]")
+
+	It("[1.1.36] Ensure that the admission control plugin EventRateLimit is set [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--enable-admission-plugins", "EventRateLimit"))
 		ExpectProcess(f).To(HaveFlagWithAnyValue("--admission-control-config-file"))
 	})
 
-	It("[1.1.36] Ensure that the AdvancedAuditing argument is not set to false [Scored]", func() {
+	It("[1.1.37] Ensure that the AdvancedAuditing argument is not set to false [Scored]", func() {
 		ExpectProcess(f).To(NotHaveFlagOrNotContainValue("--feature-gates", "AdvancedAuditing=false"))
 	})
 
-	PIt("[1.1.37] Ensure that the --request-timeout argument is set as appropriate [Scored]")
+	PIt("[1.1.38] Ensure that the --request-timeout argument is set as appropriate [Scored]")
+
+	It("[1.1.39] Ensure that the --authorization-mode argument includes RBAC [Scored]", func() {
+		ExpectProcess(f).To(HaveFlagThatContainsValue("--authorization-mode", "RBAC"))
+	})
 }
