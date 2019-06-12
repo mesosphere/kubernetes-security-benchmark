@@ -41,4 +41,8 @@
     invalid:  [.specs[]] | map(select(.result == "invalid"))  | length,
     timeout:  [.specs[]] | map(select(.result == "timeout"))  | length,
     panicked: [.specs[]] | map(select(.result == "panicked")) | length,
+    score:    {
+      total_scored: [.specs[]] | map(select(.scored == true)) | length,
+      scored_passed: [.specs[]] | map(select(.scored == true) | select(.result == "passed")) | length
+    } | (.scored_passed * 100 / .total_scored) | round
   }

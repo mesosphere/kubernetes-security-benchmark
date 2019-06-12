@@ -27,7 +27,7 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	f := framework.New(apiServerProcessName, missingProcessFunc)
 	BeforeEach(f.BeforeEach)
 
-	It("[1.1.1] Ensure that the --anonymous-auth argument is set to false [Scored]", func() {
+	It("[1.1.1] Ensure that the --anonymous-auth argument is set to false [Not Scored]", func() {
 		ExpectProcess(f).To(HaveFlagWithValue("--anonymous-auth", "false"))
 	})
 

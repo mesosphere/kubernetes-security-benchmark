@@ -16,11 +16,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/mesosphere/kubernetes-security-benchmark/pkg/cis"
 
 	"github.com/spf13/cobra"
 )
-
-const CISVersion = "1.2.0"
 
 // cisVersionCmd represents the cisversion command
 var cisVersionCmd = &cobra.Command{
@@ -28,7 +27,7 @@ var cisVersionCmd = &cobra.Command{
 	Short: "Prints the version of the Kubernetes CIS Benchmark",
 	Long:  `Prints the version of the Kubernetes CIS Benchmark.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Kubernetes CIS Benchmark v%s\n", CISVersion)
+		fmt.Printf("Kubernetes CIS Benchmark v%s\n", cis.CISVersion)
 	},
 }
 
