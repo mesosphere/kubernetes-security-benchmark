@@ -117,7 +117,7 @@ func APIServer(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	})
 
 	It("[1.1.23] Ensure that the --service-account-lookup argument is set to true [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagWithValue("--service-account-lookup", "true"))
+		ExpectProcess(f).To(NotHaveFlagOrHaveFlagWithValue("--service-account-lookup", "true"))
 	})
 
 	It("[1.1.24] Ensure that the admission control plugin PodSecurityPolicy is set [Scored]", func() {
