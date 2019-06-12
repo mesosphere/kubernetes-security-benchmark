@@ -46,7 +46,7 @@ func ControllerManager(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	})
 
 	It("[1.3.6] Ensure that the RotateKubeletServerCertificate argument is set to true [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--feature-gates", "RotateKubeletServerCertificate=true"))
+		ExpectProcess(f).To(HaveFlagThatDoesNotContainValue("--feature-gates", "RotateKubeletServerCertificate=false"))
 	})
 
 	It("[1.3.7] Ensure that the --address argument is set to 127.0.0.1 [Scored]", func() {

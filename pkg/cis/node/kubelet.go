@@ -77,7 +77,7 @@ func Kubelet(missingProcessFunc framework.MissingProcessHandlerFunc) {
 	})
 
 	It("[2.1.13] Ensure that the RotateKubeletServerCertificate argument is set to true [Scored]", func() {
-		ExpectProcess(f).To(HaveFlagThatContainsValue("--feature-gates", "RotateKubeletServerCertificate=true"))
+		ExpectProcess(f).To(HaveFlagThatDoesNotContainValue("--feature-gates", "RotateKubeletServerCertificate=false"))
 	})
 
 	It("[2.1.14] Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers [Not Scored]", func() {
