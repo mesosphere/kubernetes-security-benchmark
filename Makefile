@@ -29,6 +29,15 @@ CIS_FOCUS ?=
 .PHONY: build
 build: out/$(BINARYNAME)
 
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+SEDI := sed -i ''
+OPEN := open
+else
+SEDI := sed -i
+OPEN := xdg-open
+endif
+
 out/$(BINARYNAME): $(shell find ! -path './out/*' ! -path './results/*' -type f)
 	@GOOS=linux GOARCH=amd64 go build \
 		-tags netgo \
@@ -49,13 +58,9 @@ test.dcos.aggregate:
 		jq ".specs |= ([.[] | {name: .name, results: {\"$${directory_name}\": del(.name)}}])" $${f} > $(CURDIR)/results/$${directory_name}/cis-munged.json ; \
 	done ;
 	@jq --slurp -f $(CURDIR)/aggregate.jq $$(find $(CURDIR)/results -name cis-munged.json) > $(CURDIR)/results/cis-aggregated.json
-	@sed -i 's|$(GOPATH)/src/||g' $(CURDIR)/results/cis-aggregated.json
+	@$(SEDI) 's|$(GOPATH)/src/||g' $(CURDIR)/results/cis-aggregated.json
 	@go run $(CURDIR)/cmd/aggregated-render/main.go ./results/cis-aggregated.json ./aggregated.html.tmpl $(CURDIR)/results/aggregated.html
-	@if [ `uname` == "Darwin" ]; then \
-		open $(CURDIR)/results/aggregated.html ; \
-	else \
-		xdg-open $(CURDIR)/results/aggregated.html ; \
-	fi
+	@$(OPEN) $(CURDIR)/results/aggregated.html ; \
 
 .PHONY: test.dcos.remote
 test.dcos.remote:
