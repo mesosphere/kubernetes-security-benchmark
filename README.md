@@ -22,6 +22,16 @@ Flags:
 Use "kubernetes-security-benchmark [command] --help" for more information about a command.
 ```
 
+## DC/OS Quickstart
+
+If you're running this against a Kubernetes cluster deployed on DC/OS, this repository provides a simple way to run the benchmark and create an aggregated report. You must first deploy a Kubernetes cluster on DC/OS, clone this repository, and run:
+
+```shell
+$ make test.dcos
+```
+
+This will run all benchmarks against the deployed Kubernetes cluster and produce an HTML report which will automatically open in your browser.
+
 ## CIS Kubernetes Benchmark
 
 The [Center for Internet Security](https://www.cisecurity.org/) (CIS)
