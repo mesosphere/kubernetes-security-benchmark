@@ -23,7 +23,9 @@ BINARYNAME := $(shell basename $(ROOTPKG))
 BUILD_DATE := $(shell date -u)
 VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty=-dev --always)
 
-DCOS_TASK ?= kube-control-plane-0-instance
+KUBERNETES_CLUSTER ?= 
+DCOS_TASK ?= $(KUBERNETES_CLUSTER)__kube-control-plane-0-instance
+
 CIS_FOCUS ?=
 
 .PHONY: build
@@ -80,12 +82,12 @@ endif
 
 .PHONY: test.dcos.control-plane
 test.dcos.control-plane: build
-	@$(MAKE) DCOS_TASK=kube-control-plane-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__kube-control-plane-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.etcd
 test.dcos.etcd: build
-	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__etcd-0-peer CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.kubelet
 test.dcos.kubelet: build
-	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
