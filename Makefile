@@ -38,7 +38,7 @@ SEDI := sed -i
 OPEN := xdg-open
 endif
 
-out/$(BINARYNAME): $(shell find ! -path './out/*' ! -path './results/*' -type f)
+out/$(BINARYNAME): $(wildcard */*.go)
 	@GOOS=linux GOARCH=amd64 go build \
 		-tags netgo \
 		-ldflags "-extldflags \"-static\" -X $(ROOTPKG)/pkg/version.AppVersion=$(VERSION) -X '$(ROOTPKG)/pkg/version.BuildDate=$(BUILD_DATE)'" \
