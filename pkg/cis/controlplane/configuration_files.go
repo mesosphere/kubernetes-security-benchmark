@@ -175,7 +175,8 @@ func ConfigurationFiles(missingProcessFunc framework.MissingProcessHandlerFunc) 
 			})
 
 			It("[1.4.11] Ensure that the etcd data directory permissions are set to 700 or more restrictive [Scored]", func() {
-				Expect(etcdDataDir).To(HavePermissionsNumerically("<=", os.FileMode(0700)))
+				expectedPerm := os.FileMode(0700) | os.ModeDir
+				Expect(etcdDataDir).To(HavePermissionsNumerically("<=", expectedPerm))
 			})
 
 			It("[1.4.12] Ensure that the etcd data directory ownership is set to etcd:etcd [Scored]", func() {
