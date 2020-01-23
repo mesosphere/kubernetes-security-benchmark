@@ -15,6 +15,7 @@
 package matcher
 
 import (
+	"strconv"
 	"strings"
 
 	. "github.com/onsi/gomega"
@@ -100,8 +101,10 @@ func NotHaveFlagOrHaveFlagWithDifferentValue(name, value string) types.GomegaMat
 func HaveFlagThatMatchesNumerically(name string, comparator string, value interface{}) types.GomegaMatcher {
 	return MatchElements(flagID, IgnoreExtras, Elements{
 		name: WithTransform(
-			func(s string) string {
-				return strings.TrimPrefix(s, name+"=")
+			func(s string) int {
+				value := strings.TrimSpace(strings.TrimPrefix(s, name+"="))
+				i, _ := strconv.Atoi(value)
+				return i
 			},
 			BeNumerically(comparator, value),
 		),
