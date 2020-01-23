@@ -24,7 +24,8 @@ BUILD_DATE := $(shell date -u)
 VERSION ?= $(shell git describe --match 'v[0-9]*' --dirty=-dev --always)
 
 KUBERNETES_CLUSTER ?= 
-DCOS_TASK ?= $(KUBERNETES_CLUSTER)__kube-control-plane-0-instance
+KUBERNETES_CLUSTER_SANITIZED := $(subst /,., $(KUBERNETES_CLUSTER))
+DCOS_TASK ?= kube-control-plane-0-instance
 
 CIS_FOCUS ?=
 
@@ -70,24 +71,24 @@ ifndef DCOS_TASK
 	$(error "Missing DCOS_TASK variable")
 endif
 	@mkdir -p $(CURDIR)/results/$(DCOS_TASK)
-	@echo "Copying binary to $(DCOS_TASK)"
-	@cat out/$(BINARYNAME) | dcos task exec -i $(DCOS_TASK) bash -c "cat > $(BINARYNAME)"
-	@dcos task exec $(DCOS_TASK) chmod +x $(BINARYNAME)
+	@echo "Copying binary to $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK)"
+	@cat out/$(BINARYNAME) | dcos task exec -i $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK) bash -c "cat > $(BINARYNAME)"
+	@dcos task exec $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK) chmod +x $(BINARYNAME)
 	@echo "Running tests on $(DCOS_TASK)"
-	@dcos task exec $(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(DCOS_TASK)/stdout.txt || true
+	@dcos task exec $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK) ./$(BINARYNAME) cis $(CIS_FOCUS) > $(CURDIR)/results/$(DCOS_TASK)/stdout.txt || true
 	@echo "Retrieving junit results from $(DCOS_TASK) into $(CURDIR)/results/$(DCOS_TASK)/junit.xml"
-	@dcos task exec -i $(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/$(DCOS_TASK)/junit.xml
+	@dcos task exec -i $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK) bash -c "cat junit.xml" > $(CURDIR)/results/$(DCOS_TASK)/junit.xml
 	@echo "Retrieving json results from $(DCOS_TASK) into $(CURDIR)/results/$(DCOS_TASK)/cis.json"
-	@dcos task exec -i $(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/$(DCOS_TASK)/cis.json
+	@dcos task exec -i $(KUBERNETES_CLUSTER_SANITIZED)__$(DCOS_TASK) bash -c "cat cis.json" > $(CURDIR)/results/$(DCOS_TASK)/cis.json
 
 .PHONY: test.dcos.control-plane
 test.dcos.control-plane: build
-	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__kube-control-plane-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-control-plane-0-instance CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.etcd
 test.dcos.etcd: build
-	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__etcd-0-peer CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=etcd-0-peer CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
 
 .PHONY: test.dcos.kubelet
 test.dcos.kubelet: build
-	@$(MAKE) DCOS_TASK=$(KUBERNETES_CLUSTER)__kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
+	@$(MAKE) DCOS_TASK=kube-node-0-kubelet CIS_FOCUS=$(CIS_FOCUS) test.dcos.remote
