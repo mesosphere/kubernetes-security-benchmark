@@ -32,6 +32,12 @@ $ make test.dcos
 
 This will run all benchmarks against the deployed Kubernetes cluster and produce an HTML report which will automatically open in your browser.
 
+If you have more than 1 Kubernetes cluster deployed and you want to target a specific Kubernetes cluster you can use the `KUBERNETES_CLUSTER` variable.
+
+```shell
+$ make test.dcos KUBERNETES_CLUSTER=<your_kubernetes_cluster_name>
+```
+
 ## CIS Kubernetes Benchmark
 
 The [Center for Internet Security](https://www.cisecurity.org/) (CIS)
